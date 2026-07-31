@@ -8,10 +8,10 @@ const Hero = () => {
   const [currentRole, setCurrentRole] = useState(0);
 
   const roles = [
-    "Développeur Full-Stack",
-    "Étudiant en Génie Informatique", 
-    "Passionné d'IA",
-    "Tech Innovator"
+    "Étudiant en Génie Logiciel",
+    "Administrateur ITSM / GLPI",
+    "Développeur PHP & Docker",
+    "Support et ingénierie système"
   ];
 
   useEffect(() => {
@@ -88,9 +88,9 @@ const Hero = () => {
             </Badge>
           </div>
 
-          {/* Bio courte */}
+          {/* Accroche */}
           <p className="text-xl text-blue-50 mb-10 max-w-3xl mx-auto leading-relaxed">
-            {studentData.personal.bio.substring(0, 150)}...
+            {studentData.personal.tagline}
           </p>
 
           {/* Boutons d'action */}
@@ -100,7 +100,7 @@ const Hero = () => {
               className="bg-white text-blue-600 hover:bg-blue-50 font-semibold px-8 py-4 rounded-full transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
               onClick={() => scrollToSection('projects')}
             >
-              Voir mes projets
+              Voir mes réalisations
               <span className="ml-2">→</span>
             </Button>
             

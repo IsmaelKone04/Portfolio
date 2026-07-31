@@ -65,36 +65,43 @@ const Contact = () => {
     }, 2000);
   };
 
+  const { personal } = studentData;
+
+  // Affiche l'identifiant sans le protocole, plutôt que l'URL brute.
+  const handleFrom = (url) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/+$/, '');
+
+  // Un profil non renseigné n'est pas affiché, plutôt qu'affiché avec un lien mort.
   const contactMethods = [
-    {
+    personal.email && {
       icon: "📧",
       label: "Email",
-      value: studentData.personal.email,
-      href: `mailto:${studentData.personal.email}`,
+      value: personal.email,
+      href: `mailto:${personal.email}`,
       color: "from-blue-500 to-indigo-600"
     },
-    {
+    // Plusieurs numéros possibles : chacun a sa propre carte cliquable.
+    ...(personal.phones || []).map((phone, index) => ({
       icon: "📱",
-      label: "Téléphone",
-      value: studentData.personal.phone,
-      href: `tel:${studentData.personal.phone}`,
+      label: (personal.phones.length > 1) ? `Téléphone ${index + 1}` : "Téléphone",
+      value: phone,
+      href: `tel:${phone.replace(/\s/g, '')}`,
       color: "from-green-500 to-emerald-600"
-    },
-    {
+    })),
+    personal.github && {
       icon: "💻",
       label: "GitHub",
-      value: "jbkouadio",
-      href: studentData.personal.github,
+      value: handleFrom(personal.github),
+      href: personal.github,
       color: "from-gray-700 to-gray-900"
     },
-    {
+    personal.linkedin && {
       icon: "💼",
       label: "LinkedIn",
-      value: "jean-baptiste-kouadio",
-      href: studentData.personal.linkedin,
+      value: handleFrom(personal.linkedin),
+      href: personal.linkedin,
       color: "from-blue-600 to-blue-800"
     }
-  ];
+  ].filter(Boolean);
 
   return (
     <section id="contact" ref={sectionRef} className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 relative overflow-hidden">
@@ -162,19 +169,19 @@ const Contact = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-300 rounded-full animate-pulse"></div>
-                      <span>Disponible pour stages (été 2025)</span>
+                      <span>Stage en cours chez YeshiGroup jusqu'en août 2026</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-300 rounded-full animate-pulse"></div>
-                      <span>Ouvert aux projets freelance</span>
+                      <span>Ouvert aux opportunités dès septembre 2026</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-300 rounded-full animate-pulse"></div>
-                      <span>Collaborations sur projets étudiants</span>
+                      <span>Administration système, ITSM et développement backend</span>
                     </div>
                   </div>
                   <Badge className="mt-4 bg-white text-green-600 px-4 py-2">
-                    Réponse sous 24h garantie
+                    Réponse rapide
                   </Badge>
                 </CardContent>
               </Card>
@@ -281,21 +288,21 @@ const Contact = () => {
           <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-gray-900 to-blue-900 rounded-2xl p-8 text-white">
               <h3 className="text-2xl font-bold mb-4">
-                {studentData.personal.name}
+                {personal.name}
               </h3>
               <p className="text-blue-200 mb-6">
-                {studentData.personal.title} • {studentData.personal.university}
+                {personal.title} • {personal.university}
               </p>
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 <Badge className="bg-white text-gray-900 px-4 py-2">
-                  📍 {studentData.personal.location}
+                  📍 {personal.location}
                 </Badge>
                 <Badge className="bg-blue-500 hover:bg-blue-600 px-4 py-2">
-                  🎓 {studentData.personal.year}
+                  🎓 {personal.year}
                 </Badge>
               </div>
               <p className="text-blue-100 text-sm mt-6">
-                "Passionné par la technologie et l'innovation pour l'Afrique"
+                {personal.tagline}
               </p>
             </div>
           </div>

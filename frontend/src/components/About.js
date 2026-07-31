@@ -59,18 +59,18 @@ const About = () => {
                 <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-lg transform transition-all duration-300 hover:scale-105">
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-blue-600 mb-2">
-                      {studentData.projects.length}+
+                      {studentData.projects.length}
                     </div>
-                    <div className="text-gray-600 font-medium">Projets</div>
+                    <div className="text-gray-600 font-medium">Chantiers menés</div>
                   </CardContent>
                 </Card>
                 
                 <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg transform transition-all duration-300 hover:scale-105">
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-purple-600 mb-2">
-                      {studentData.skills.languages.length}+
+                      {Object.values(studentData.skills).flat().length}
                     </div>
-                    <div className="text-gray-600 font-medium">Technologies</div>
+                    <div className="text-gray-600 font-medium">Compétences</div>
                   </CardContent>
                 </Card>
               </div>

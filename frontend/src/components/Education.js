@@ -7,6 +7,8 @@ import { studentData } from '../data/mockData';
 const Education = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const { academic } = studentData;
+  const progressPercent = Math.round((academic.currentYear / academic.totalYears) * 100);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -132,9 +134,11 @@ const Education = () => {
                   📊
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Progression</h3>
-                <p className="text-gray-600 mb-4">2ème année sur 3</p>
-                <Progress value={66} className="h-3 bg-white" />
-                <p className="text-sm text-gray-500 mt-2">66% complété</p>
+                <p className="text-gray-600 mb-4">
+                  {academic.currentYear}ᵉ année sur {academic.totalYears}
+                </p>
+                <Progress value={progressPercent} className="h-3 bg-white" />
+                <p className="text-sm text-gray-500 mt-2">{progressPercent}% complété</p>
               </CardContent>
             </Card>
 
@@ -145,8 +149,8 @@ const Education = () => {
                   🎯
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Moyenne</h3>
-                <p className="text-3xl font-bold text-green-600 mb-2">16.5/20</p>
-                <Badge className="bg-green-100 text-green-800">Excellent</Badge>
+                <p className="text-3xl font-bold text-green-600 mb-2">{academic.average}</p>
+                <Badge className="bg-green-100 text-green-800">Licence en cours</Badge>
               </CardContent>
             </Card>
 
@@ -157,67 +161,29 @@ const Education = () => {
                   🧠
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Spécialisation</h3>
-                <p className="text-gray-600 mb-2">Développement & IA</p>
+                <p className="text-gray-600 mb-2">{academic.specialization}</p>
                 <Badge className="bg-purple-100 text-purple-800">En cours</Badge>
               </CardContent>
             </Card>
           </div>
 
-          {/* Projets académiques highlights */}
-          <Card className="bg-gradient-to-r from-gray-900 to-blue-900 text-white border-0 shadow-2xl">
-            <CardContent className="p-8">
-              <h3 className="text-3xl font-bold mb-6 text-center">
-                🏆 Projets Académiques Marquants
-              </h3>
-              
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <h4 className="text-xl font-semibold text-blue-300">Projet de 1ère année</h4>
-                  <h5 className="text-lg font-medium">Système de Gestion Bibliothèque</h5>
-                  <p className="text-gray-300 leading-relaxed">
-                    Application desktop en Java avec interface graphique pour gérer les emprunts, 
-                    retours et catalogues d'une bibliothèque universitaire.
-                  </p>
-                  <div className="flex gap-2">
-                    <Badge className="bg-blue-500 hover:bg-blue-600">Java</Badge>
-                    <Badge className="bg-blue-500 hover:bg-blue-600">Swing</Badge>
-                    <Badge className="bg-blue-500 hover:bg-blue-600">MySQL</Badge>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-xl font-semibold text-green-300">Projet de 2ème année</h4>
-                  <h5 className="text-lg font-medium">Plateforme E-learning</h5>
-                  <p className="text-gray-300 leading-relaxed">
-                    Plateforme web collaborative permettant aux étudiants et professeurs 
-                    de partager des cours, exercices et suivre les progressions.
-                  </p>
-                  <div className="flex gap-2">
-                    <Badge className="bg-green-500 hover:bg-green-600">React</Badge>
-                    <Badge className="bg-green-500 hover:bg-green-600">Node.js</Badge>
-                    <Badge className="bg-green-500 hover:bg-green-600">MongoDB</Badge>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Call to action */}
-          <div className="mt-12 text-center">
+          <div className="text-center">
             <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-100">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                En route vers l'excellence ! 🚀
+                De la théorie à la production 🚀
               </h3>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Ma formation m'équipe des compétences théoriques et pratiques nécessaires 
-                pour affronter les défis technologiques de demain.
+                Les cours d'administration systèmes et réseaux, de bases de données et de
+                cybersécurité ont trouvé leur prolongement direct sur une plateforme réellement
+                exploitée par un groupe multi-pays.
               </p>
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 <Badge className="bg-indigo-100 text-indigo-800 px-4 py-2 text-sm">
-                  🎓 Diplôme prévu: 2026
+                  🎓 Diplôme prévu : {academic.graduationYear}
                 </Badge>
                 <Badge className="bg-purple-100 text-purple-800 px-4 py-2 text-sm">
-                  💡 Spécialisation: IA & Développement
+                  🏫 {studentData.personal.university}
                 </Badge>
               </div>
             </div>
