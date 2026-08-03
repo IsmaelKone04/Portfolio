@@ -779,9 +779,11 @@ export const studentData = {
       // Version de travail resynchronisée le 03/08/2026 (commit 4c441a2) : le dépôt
       // contient désormais les 500 questions, les sons et les vues scoreboard, et
       // correspond à la version compilée en APK.
-      // Reste à faire avant bascule en public : ajouter les captures d'écran, et
-      // corriger la détection d'adresse IP de l'hôte (le QR annonce l'adresse du
-      // mauvais réseau, voire 0.0.0.0 quand seul le partage de connexion est actif).
+      // 03/08/2026 : détection d'adresse IP de l'hôte corrigée (le QR annonçait
+      // l'adresse du mauvais réseau), et mise en page de la question revue pour
+      // tenir sur un écran. Les deux restent à valider sur deux téléphones.
+      // Le dépôt porte aussi un plan d'améliorations (AMELIORATIONS.md).
+      // Reste à faire avant bascule en public : ajouter les captures d'écran.
       github: "https://github.com/IsmaelKone04/kizunaverse",
       demo: null
     },
