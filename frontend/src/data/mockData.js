@@ -760,9 +760,9 @@ export const studentData = {
       status: "Terminé",
       featured: false,
       description:
-        "Application mobile de quiz multijoueur fonctionnant intégralement hors ligne : un joueur devient hôte, son téléphone héberge le serveur, les autres rejoignent son point d'accès Wi-Fi en scannant un QR code. Aucun serveur distant, aucune connexion Internet — la partie se joue n'importe où. 216 questions embarquées sur 5 catégories et 4 niveaux de difficulté, huit écrans, thèmes graphiques changeant selon l'univers joué.",
+        "Application mobile de quiz multijoueur fonctionnant intégralement hors ligne : un joueur devient hôte, son téléphone héberge le serveur, les autres rejoignent son point d'accès Wi-Fi en scannant un QR code. Aucun serveur distant, aucune connexion Internet — la partie se joue n'importe où. 500 questions embarquées réparties sur quatre catégories thématiques — mangas, séries d'enfance, films, génériques — plus un mode mix, sur quatre niveaux de difficulté. Huit écrans, thèmes graphiques changeant selon l'univers joué, effets sonores, tableau des scores dédié, et de quoi varier une soirée : gages infligés au dernier de chaque manche, mode équipes, mort subite pour départager, mode spectateur pour les retardataires, et un éditeur permettant d'ajouter ses propres questions.",
       impact:
-        "React Native ne fournissant pas de serveur WebSocket, j'ai implémenté le protocole moi-même au-dessus de TCP : négociation d'ouverture RFC 6455, SHA-1 en JavaScript pur pour la clé d'acceptation, puis encodage et décodage des trames. L'hôte fait autorité sur l'état de la partie ; battement de cœur, reconnexion à intervalle croissant, correction du décalage d'horloge et rejet des messages en double permettent à un joueur déconnecté de revenir sans perdre son score. Le dépôt est documenté de bout en bout : architecture réseau, protocole de messages et limites connues sont expliqués dans le README.",
+        "React Native ne fournissant pas de serveur WebSocket, j'ai implémenté le protocole moi-même au-dessus de TCP : négociation d'ouverture RFC 6455, SHA-1 en JavaScript pur pour la clé d'acceptation, puis encodage et décodage des trames. L'hôte fait autorité sur l'état de la partie ; battement de cœur, reconnexion à intervalle croissant, correction du décalage d'horloge et rejet des messages en double permettent à un joueur déconnecté de revenir sans perdre son score. Le projet est compilé en APK et tourne sur téléphone Android : création de salon, code de session, QR code et chat fonctionnent sur l'appareil. Le dépôt est documenté de bout en bout : architecture réseau, protocole de messages et limites connues sont expliqués dans le README.",
       technologies: [
         "React Native",
         "Expo SDK 52",
@@ -776,7 +776,12 @@ export const studentData = {
       image: null,
       // Projet personnel, code publiable. Dépôt assaini le 30/07/2026 (historique
       // réécrit pour purger notes de travail et config IDE, licence MIT ajoutée).
-      // Reste à faire avant bascule en public : ajouter les captures d'écran.
+      // Version de travail resynchronisée le 03/08/2026 (commit 4c441a2) : le dépôt
+      // contient désormais les 500 questions, les sons et les vues scoreboard, et
+      // correspond à la version compilée en APK.
+      // Reste à faire avant bascule en public : ajouter les captures d'écran, et
+      // corriger la détection d'adresse IP de l'hôte (le QR annonce l'adresse du
+      // mauvais réseau, voire 0.0.0.0 quand seul le partage de connexion est actif).
       github: "https://github.com/IsmaelKone04/kizunaverse",
       demo: null
     },
