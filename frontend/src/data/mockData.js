@@ -729,25 +729,27 @@ export const studentData = {
       status: "Prototype",
       featured: true,
       description:
-        "Projet mené à deux en vue d'un concours : j'ai pris en charge l'intégralité du front-end, mon binôme le back-end. Interface de supervision destinée aux analystes d'un organisme d'assurance santé, en six écrans — tableau de bord, alertes, analyses, investigations, rapports et paramètres — avec un contrôle d'accès à trois rôles (administrateur, superviseur, analyste).",
+        "Projet mené à deux en vue d'un concours : j'ai pris en charge l'intégralité du front-end, mon binôme le back-end. Interface de supervision destinée aux analystes d'un organisme d'assurance santé, avec un contrôle d'accès à trois rôles (administrateur, superviseur, analyste). Au-delà du tableau de bord et de la gestion des dossiers, la console explique chaque score facteur par facteur, simule l'effet d'un autre seuil de déclenchement, cartographie les réseaux de fraude entre assurés et établissements, et journalise chaque décision dans une piste d'audit.",
       impact:
-        "Le front-end est architecturé en couches (types → service → composants) : une couche de service isole entièrement l'accès aux données, si bien que le passage des jeux simulés au back-end se fait par une simple variable d'environnement, sans toucher un seul composant. Le back-end n'ayant pas été livré, l'application fonctionne aujourd'hui sur des données simulées. L'accès aux pages est filtré avant le rendu, en amont des composants, et les mots de passe des comptes de démonstration sont vérifiés par empreinte bcrypt.",
+        "Le front-end est architecturé en couches (types → service → composants) : une couche de service isole entièrement l'accès aux données, si bien que le passage des jeux simulés au back-end se fait par une simple variable d'environnement, sans toucher un seul composant — le contrat que la vraie API devra respecter est documenté pour l'équipe qui la construira. Le back-end n'ayant pas été livré, l'application fonctionne sur des données simulées, avec des modifications stockées localement et annulées si le service les refuse. L'accès aux pages est filtré avant le rendu, en amont des composants, et les mots de passe des comptes de démonstration sont vérifiés par empreinte bcrypt. L'ensemble est couvert par 256 tests unitaires et deux parcours de bout en bout ; j'en ai aussi profité pour entraîner, sur un jeu de données distinct, un modèle de détection de fraude à l'assurance automobile — une régression logistique écrite à la main, pour que sa décomposition retombe toujours exactement sur le score qu'elle affiche.",
       technologies: [
         "Next.js 16",
         "React 19",
         "TypeScript",
         "Tailwind CSS 4",
         "shadcn/ui",
+        "Zustand",
         "Recharts",
-        "TanStack Table",
         "NextAuth.js",
         "bcrypt",
-        "Zod"
+        "Zod",
+        "Playwright"
       ],
       image: null,
-      // Dépôt public. Revu le 30/07/2026 : correction d'une authentification qui
-      // ne vérifiait pas le mot de passe, 12 erreurs de typage corrigées,
-      // documentation et licence ajoutées. Build de production vérifié.
+      // Dépôt public. Revu le 26/08/2026 : documentation finale (architecture,
+      // contrat d'API, captures), explicabilité du score, piste d'audit, graphe
+      // de réseaux de fraude, simulateur de seuils et suite de tests (256
+      // unitaires + Playwright) ajoutés. Build de production vérifié.
       github: "https://github.com/IsmaelKone04/FraudShield-v2",
       demo: null
     },
