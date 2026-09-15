@@ -904,6 +904,50 @@ export const studentData = {
       video: null,
       github: "https://github.com/IsmaelKone04/kinougarde",
       demo: null
+    },
+
+    // Projet personnel — dépôt privé (github.com/IsmaelKone04/monbail, code source
+    // de référence). Captures prises le 15/09/2026 sur l'instance Docker locale
+    // (docker compose up --build), comptes et annonces de démonstration du seed.
+    // Images Docker Hub publiées : ismael04/monbail-{api,web}.
+    {
+      id: 20,
+      groupId: "perso",
+      title: "monbail — plateforme immobilière P2P pour la Côte d'Ivoire",
+      emoji: "🏠",
+      category: "Développement",
+      status: "Terminé",
+      featured: true,
+      description:
+        "Plateforme mettant en relation directe bailleurs et locataires/acheteurs en Côte d'Ivoire, sans intermédiaire : annonces de location, vente, meublé courte durée, ou location-vente avec option d'achat. Chaque transaction passe par un séquestre dédié — les fonds sont bloqués via un prestataire Mobile Money réel (CinetPay) jusqu'à confirmation de l'état du bien, puis libérés ou remboursés selon une machine à états auditable. Recherche par budget avec correspondances approchantes (±10 %), baromètre des loyers par commune, messagerie temps réel qui masque les numéros personnels, KYC (pièce d'identité et justificatif de propriété), modération et médiation en cas de litige.",
+      impact:
+        "Monorepo pnpm/Turborepo : API NestJS, web Next.js, application mobile Expo et back-office admin, autour d'un domaine métier partagé. Quatre machines à états de séquestre indépendantes (location, vente, courte durée, location-vente) alimentent un grand livre comptable à double écriture dont l'équilibre est vérifié en continu. CinetPay est branché des deux côtés du flux d'argent : encaissements Mobile Money à l'entrée, versements sortants automatisés vers bailleurs/vendeurs via l'API Transfer, avec relance manuelle en cas d'échec. Photos et vidéo de visite sont filigranées par un pipeline asynchrone (BullMQ, stockage S3), le chat tourne en WebSocket temps réel. 24 jalons livrés à ce jour, couverts par des suites de tests unitaires (domaine, API) et des scénarios de bout en bout rejoués contre une instance Docker réelle avant chaque jalon. Projet non encore déployé publiquement — images conteneurisées publiées sur Docker Hub (build multi-étapes, `docker compose up --build` en local).",
+      technologies: [
+        "NestJS",
+        "Next.js",
+        "React Native / Expo",
+        "TypeScript",
+        "PostgreSQL",
+        "Prisma",
+        "Redis",
+        "Docker Compose",
+        "Socket.IO",
+        "CinetPay (Mobile Money)",
+        "Tailwind CSS"
+      ],
+      images: [
+        "/images/monbail/01-annonces.png",
+        "/images/monbail/02-fiche-annonce.png",
+        "/images/monbail/03-barometre.png",
+        "/images/monbail/04-assistant-budget.png",
+        "/images/monbail/05-compte-tableau-de-bord.png",
+        "/images/monbail/06-sequestre-paiement-mobile-money.png"
+      ],
+      video: null,
+      // Dépôt github.com/IsmaelKone04/monbail existant mais PRIVÉ : pas de lien
+      // public tant qu'il reste ainsi (éviterait un 404 pour un visiteur).
+      github: null,
+      demo: null
     }
   ],
 
