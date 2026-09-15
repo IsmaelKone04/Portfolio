@@ -452,7 +452,8 @@ export const studentData = {
       impact:
         "Attribution automatique fiable, validée en conditions réelles — chaque hypothèse de bug confirmée par des tests authentifiés, jamais par supposition.",
       technologies: ["PHP", "Hooks GLPI", "SQL", "Heartbeat / présence", "Analyse de logs"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -469,7 +470,8 @@ export const studentData = {
       impact:
         "Une plateforme moderne, isolée et reproductible pour un groupe présent dans 14 pays — socle de tous les développements suivants.",
       technologies: ["Docker Compose", "GLPI 11", "MariaDB", "nginx", "TLS"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -486,7 +488,8 @@ export const studentData = {
       impact:
         "Service rétabli pour l'ensemble des filiales, avec une sauvegarde automatique hebdomadaire instaurée pour ne plus subir l'incident sans filet.",
       technologies: ["Docker", "Linux", "nginx / HTTPS", "Sauvegarde & restauration", "Gestion d'incident"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -503,7 +506,8 @@ export const studentData = {
       impact:
         "Parcours de connexion validé de bout en bout en laboratoire ; la bascule vers l'instance d'entreprise a été volontairement différée.",
       technologies: ["Keycloak", "oauth2-proxy", "OpenID Connect", "Microsoft Entra ID", "nginx"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -520,7 +524,8 @@ export const studentData = {
       impact:
         "Les demandes des utilisateurs finaux sont désormais catégorisées puis attribuées automatiquement, de bout en bout — les cas « Autre » restant traités par un technicien.",
       technologies: ["PHP", "Formulaires GLPI", "Conception de mapping", "Réutilisation de l'existant"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -537,7 +542,8 @@ export const studentData = {
       impact:
         "Une interface aux couleurs du groupe, entièrement réversible et qui survit aux mises à jour de GLPI.",
       technologies: ["HTML / CSS", "JavaScript (MutationObserver)", "Plugins GLPI", "Thème Keycloak", "UI/UX"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -554,7 +560,8 @@ export const studentData = {
       impact:
         "Bilans de présence jour / semaine / mois fiables, assortis d'un indicateur de qualité de la donnée distinguant présence certaine et présence estimée.",
       technologies: ["PHP", "CronTask", "SQL / agrégations", "Export CSV", "Contrôle d'accès"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -571,7 +578,8 @@ export const studentData = {
       impact:
         "Un référentiel propre, un paramétrage conforme aux rôles réels, et des notifications vérifiées de bout en bout sur une demande réelle.",
       technologies: ["GLPI (API native)", "SQL", "SMTP", "Modélisation de données", "Audit"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -602,7 +610,8 @@ export const studentData = {
         "pandas",
         "pytest"
       ],
-      image: null,
+      images: [],
+      video: null,
       github: "https://github.com/IsmaelKone04/DGH_V1",
       demo: null
     },
@@ -633,7 +642,8 @@ export const studentData = {
         "TypeScript",
         "Vite"
       ],
-      image: null,
+      images: [],
+      video: null,
       github: "https://github.com/IsmaelKone04/Stage",
       demo: null
     },
@@ -664,7 +674,8 @@ export const studentData = {
         "Docker",
         "GitHub Actions"
       ],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -691,7 +702,8 @@ export const studentData = {
         "Docker",
         "Testcontainers"
       ],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -712,7 +724,8 @@ export const studentData = {
       impact:
         "C'est le contexte où j'ai travaillé sur une base de code que je ne contrôlais pas seul : se caler sur les conventions déjà en place, discuter les frontières entre services et intégrer sa partie sans casser celle des autres. Une compétence différente de celle qu'on développe sur ses propres dépôts.",
       technologies: ["Java", "Spring Boot", "Architecture microservices", "Maven", "Docker", "Git en équipe"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -745,7 +758,8 @@ export const studentData = {
         "Zod",
         "Playwright"
       ],
-      image: null,
+      images: [],
+      video: null,
       // Dépôt public. Revu le 26/08/2026 : documentation finale (architecture,
       // contrat d'API, captures), explicabilité du score, piste d'audit, graphe
       // de réseaux de fraude, simulateur de seuils et suite de tests (256
@@ -775,7 +789,8 @@ export const studentData = {
         "Reanimated",
         "Découverte réseau LAN"
       ],
-      image: null,
+      images: [],
+      video: null,
       // Projet personnel, code publiable. Dépôt assaini le 30/07/2026 (historique
       // réécrit pour purger notes de travail et config IDE, licence MIT ajoutée).
       // Version de travail resynchronisée le 03/08/2026 (commit 4c441a2) : le dépôt
@@ -814,7 +829,8 @@ export const studentData = {
         "JavaScript",
         "API d'IA en ligne (transcription & vision)"
       ],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null,
       // Image publique : preuve vérifiable de la livraison.
@@ -839,7 +855,8 @@ export const studentData = {
       impact:
         "C'est ici que j'ai appris le modèle MVT, les migrations et l'authentification Django — les mêmes fondations que j'ai reprises deux ans plus tard pour SIGFOR, à une tout autre échelle. Je l'ai repris récemment pour le rendre présentable, et c'est cette relecture qui est instructive : le prix du billet remontait du formulaire au lieu d'être fixé côté serveur, les secrets étaient écrits dans le code, et les pages de connexion étaient restées à l'état de maquettes. Le README liste ces six erreurs et ce que j'en ai tiré.",
       technologies: ["Python", "Django", "SQLite", "HTML / CSS"],
-      image: null,
+      images: [],
+      video: null,
       github: "https://github.com/IsmaelKone04/Atelier-",
       demo: null
     },
@@ -859,7 +876,8 @@ export const studentData = {
       impact:
         "Premier travail à plusieurs sur une même base de code : nous avons dû nous répartir les modules, nous mettre d'accord sur le schéma de base de données commun et intégrer nos parties. C'est aussi le projet qui m'a fait comprendre l'intérêt de séparer l'accès aux données des pages elles-mêmes — les modèles sont isolés dans `includes/`.",
       technologies: ["PHP", "MySQL", "HTML / CSS", "Travail en équipe"],
-      image: null,
+      images: [],
+      video: null,
       github: null,
       demo: null
     },
@@ -882,7 +900,8 @@ export const studentData = {
       impact:
         "C'est le projet sur lequel j'ai le plus appris en le relisant deux ans après. La page de modification d'une fiche enfant chargeait la ligne sur le seul identifiant de l'URL, sans vérifier à qui elle appartenait : n'importe quel parent pouvait consulter et modifier le dossier de l'enfant d'une autre famille. L'inscription des nounous enregistrait aussi le mot de passe en clair alors que celle des parents le hachait. J'ai également réorganisé le projet, dont les trente fichiers vivaient tous à la racine : la connexion à la base et les identifiants MySQL sont désormais hors de la racine web, où aucune URL ne peut les atteindre. Avoir trouvé ces défauts moi-même, les avoir corrigés et documentés dans le README m'a plus appris que le développement initial.",
       technologies: ["PHP 8", "MySQL", "PDO", "HTML / CSS", "JavaScript"],
-      image: null,
+      images: [],
+      video: null,
       github: "https://github.com/IsmaelKone04/kinougarde",
       demo: null
     }

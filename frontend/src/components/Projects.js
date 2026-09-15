@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import ProjectGallery from './ProjectGallery';
 import { studentData } from '../data/mockData';
 
 // Les réalisations sont rattachées à leur contexte par `groupId` : soit un stage
@@ -39,12 +40,17 @@ const Projects = () => {
   const visibleGroups =
     filter === 'all' ? groups : groups.filter((group) => group.exp.id === filter);
 
-  const ProjectCard = ({ project }) => (
+  const ProjectCard = ({ project }) => {
+    const [galleryOpen, setGalleryOpen] = useState(false);
+    const images = project.images || [];
+    const hasMedia = images.length > 0 || Boolean(project.video);
+
+    return (
     <Card className="group h-full flex flex-col bg-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 overflow-hidden">
       <div className="relative overflow-hidden">
-        {project.image ? (
+        {images.length > 0 ? (
           <img
-            src={project.image}
+            src={images[0]}
             alt={project.title}
             className="w-full h-48 object-cover transition-all duration-700 group-hover:scale-110"
           />
@@ -73,6 +79,15 @@ const Projects = () => {
             {project.category}
           </Badge>
         </div>
+
+        {/* Compteur de captures supplémentaires */}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 right-4">
+            <Badge variant="secondary" className="bg-black/60 text-white px-2 py-1">
+              +{images.length - 1}
+            </Badge>
+          </div>
+        )}
       </div>
 
       <CardContent className="p-6 flex flex-col flex-1">
@@ -105,6 +120,17 @@ const Projects = () => {
               </Badge>
             ))}
           </div>
+        )}
+
+        {/* Galerie de captures et/ou vidéo de démo */}
+        {hasMedia && (
+          <Button
+            variant="outline"
+            onClick={() => setGalleryOpen(true)}
+            className="mb-4 border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-all duration-300"
+          >
+            🖼️ Galerie
+          </Button>
         )}
 
         {/* Liens — les chantiers internes n'ont ni dépôt public ni démonstration */}
@@ -158,8 +184,17 @@ const Projects = () => {
           )}
         </div>
       </CardContent>
+
+      {hasMedia && (
+        <ProjectGallery
+          project={project}
+          open={galleryOpen}
+          onOpenChange={setGalleryOpen}
+        />
+      )}
     </Card>
-  );
+    );
+  };
 
   // En-tête d'un groupe : rappelle le stage dont sont issues les réalisations qui suivent.
   const GroupHeader = ({ exp, count }) => (
