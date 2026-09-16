@@ -948,6 +948,42 @@ export const studentData = {
       // public tant qu'il reste ainsi (éviterait un 404 pour un visiteur).
       github: null,
       demo: null
+    },
+
+    // Projet personnel — dépôt github.com/IsmaelKone04/billetterie existant
+    // mais PRIVÉ : pas de lien public tant qu'il reste ainsi (même choix que
+    // monbail, pour éviter un 404 pour un visiteur). Contenu établi à partir
+    // de docs/RAPPORT.md et du code source (jalons M0 à Mn, tous poussés).
+    {
+      id: 21,
+      groupId: "perso",
+      title: "billetterie — marketplace de billetterie événementielle pour la Côte d'Ivoire",
+      emoji: "🎟️",
+      category: "Développement",
+      status: "Terminé",
+      featured: true,
+      description:
+        "Marketplace de billetterie pour des événements en Côte d'Ivoire : achat en ligne avec paiement Mobile Money (Orange Money/MTN/Moov/Wave via l'agrégateur CinetPay), places numérotées ou zones à quota, billet QR avec scan de contrôle d'accès en temps réel refusant tout second passage, et espace organisateur en libre-service (inscription, création d'événements, tableau de bord analytics par événement : ventes, taux de remplissage, revenu).",
+      impact:
+        "Architecture à deux back-ends sur un schéma Postgres partagé : Django reste seul propriétaire des migrations et du back-office (organisateurs, lieux, plan de salle, événements), FastAPI expose l'API publique (catalogue, achat, paiement, scan, marketplace) sur ces mêmes tables, autour d'une machine à états de commande partagée par les deux. L'achat verrouille et réserve les billets via Redis pour empêcher la survente en cas d'achats concurrents ; l'attribution des sièges numérotés suit la même logique — un siège par billet, jamais réutilisé tant que la commande qui le retient n'a pas échoué. Le QR est généré et décodé entièrement côté client (caméra du téléphone, canvas), et encode un token signé plutôt que l'identifiant brut du billet. Authentification organisateur par JWT, mots de passe hachés PBKDF2-SHA256 (200 000 itérations). Stack conteneurisée (Postgres, Redis, Django, FastAPI, Next.js) démarrée et vérifiée de bout en bout via `docker compose up --build`, 23 tests d'intégration automatisés contre un vrai Postgres/Redis, complétés par des parcours d'achat, de paiement, de scan et de tableau de bord rejoués en HTTP réel à travers les cinq conteneurs. Le paiement Mobile Money tourne pour l'instant sur un simulateur, faute d'identifiants CinetPay réels et d'organisateur à onboarder ; la capture caméra du scan n'a pas encore été validée sur un vrai navigateur ; pas de libération automatique des commandes bloquées en attente de paiement.",
+      technologies: [
+        "Django",
+        "FastAPI",
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "PostgreSQL",
+        "SQLAlchemy",
+        "Redis",
+        "Docker Compose",
+        "JWT",
+        "CinetPay (Mobile Money)",
+        "Tailwind CSS"
+      ],
+      images: [],
+      video: null,
+      github: null,
+      demo: null
     }
   ],
 
