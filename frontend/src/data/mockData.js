@@ -758,7 +758,16 @@ export const studentData = {
         "Zod",
         "Playwright"
       ],
-      images: [],
+      images: [
+        "/images/fraudshield/01-dashboard.png",
+        "/images/fraudshield/02-decomposition-score.png",
+        "/images/fraudshield/03-qualite-boucle-retroaction.png",
+        "/images/fraudshield/04-simulateur-seuils.png",
+        "/images/fraudshield/05-graphe-reseaux.png",
+        "/images/fraudshield/06-notation-modele-auto.png",
+        "/images/fraudshield/07-portefeuille-reference.png",
+        "/images/fraudshield/08-piste-audit.png"
+      ],
       video: null,
       // Dépôt public. Revu le 26/08/2026 : documentation finale (architecture,
       // contrat d'API, captures), explicabilité du score, piste d'audit, graphe
@@ -835,30 +844,6 @@ export const studentData = {
       demo: null,
       // Image publique : preuve vérifiable de la livraison.
       dockerhub: "https://hub.docker.com/r/ismael04/mediasense-frontend"
-    },
-
-    // Tout premier projet d'école (Django, mars 2024). Conservé volontairement :
-    // il sert de point de départ dans la progression, pas de vitrine technique.
-    // Dépôt repris le 30/07/2026 : correctifs bloquants, secrets sortis du code,
-    // base SQLite (qui contenait un vrai compte) purgée de l'historique, README.
-    // Reste à faire avant bascule en public : force-push de l'historique réécrit.
-    {
-      id: 16,
-      groupId: "academique",
-      title: "Billetterie pour la can 2023 — premier projet Django",
-      emoji: "🎟️",
-      category: "Développement",
-      status: "Terminé",
-      featured: false,
-      description:
-        "Mon tout premier projet web, réalisé en cours : une billetterie d'événements sportifs en Django. Catalogue des événements, création de compte, connexion, page de détail par événement, achat d'un billet selon sa catégorie tarifaire, et back-office réservé aux administrateurs pour ajouter les événements.",
-      impact:
-        "C'est ici que j'ai appris le modèle MVT, les migrations et l'authentification Django — les mêmes fondations que j'ai reprises deux ans plus tard pour SIGFOR, à une tout autre échelle. Je l'ai repris récemment pour le rendre présentable, et c'est cette relecture qui est instructive : le prix du billet remontait du formulaire au lieu d'être fixé côté serveur, les secrets étaient écrits dans le code, et les pages de connexion étaient restées à l'état de maquettes. Le README liste ces six erreurs et ce que j'en ai tiré.",
-      technologies: ["Python", "Django", "SQLite", "HTML / CSS"],
-      images: [],
-      video: null,
-      github: "https://github.com/IsmaelKone04/Atelier-",
-      demo: null
     },
 
     // Projet de groupe (janvier 2025) — réalisé à trois. Présenté comme tel :
@@ -950,10 +935,9 @@ export const studentData = {
       demo: null
     },
 
-    // Projet personnel — dépôt github.com/IsmaelKone04/billetterie existant
-    // mais PRIVÉ : pas de lien public tant qu'il reste ainsi (même choix que
-    // monbail, pour éviter un 404 pour un visiteur). Contenu établi à partir
-    // de docs/RAPPORT.md et du code source (jalons M0 à Mn, tous poussés).
+    // Projet personnel — dépôt github.com/IsmaelKone04/billetterie rendu
+    // public le 17/09/2026. Contenu établi à partir de docs/RAPPORT.md et
+    // du code source (jalons M0 à Mn, tous poussés).
     {
       id: 21,
       groupId: "perso",
@@ -982,7 +966,7 @@ export const studentData = {
       ],
       images: [],
       video: null,
-      github: null,
+      github: "https://github.com/IsmaelKone04/billetterie",
       demo: null
     }
   ],
