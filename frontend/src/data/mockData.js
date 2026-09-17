@@ -10,7 +10,7 @@ export const studentData = {
     phones: ["+225 07 04 59 66 12", "+225 01 43 48 64 21"],
     github: "https://github.com/ismaelkone04",
     linkedin: "https://www.linkedin.com/in/cheick-ismaël-koné-772a77333",
-    avatar: "/images/moi.JPG",
+    avatar: "/images/moi.jpg",
     tagline: "Entre exploitation système et développement : je construis des plateformes qui tiennent en production.",
     bio: "Étudiant en 3ᵉ année de Licence Informatique — spécialité Génie Logiciel — à l'Université de Technologie d'Abidjan. Recruté comme stagiaire technicien support chez YeshiGroup (DSI), j'y ai conduit des chantiers qui ont largement dépassé le support N1 : migration de la plateforme ITSM GLPI 10 vers 11 pour un groupe présent dans 14 pays, conception d'un socle Docker Compose (GLPI, MariaDB, reverse-proxy nginx, HTTPS), développement de 4 plugins métier en PHP, mise en place d'une authentification unique Microsoft via Keycloak, et remise en service d'un helpdesk de production après une cyberattaque. Ma méthode : tester plutôt que supposer, privilégier les mécanismes natifs et les développements réversibles, et avancer par étapes validées. Je cherche aujourd'hui à poursuivre sur cette double compétence système et développement."
   },
@@ -739,7 +739,7 @@ export const studentData = {
       title: "FraudShield — détection de fraude à l'assurance santé",
       emoji: "🛡️",
       category: "Développement",
-      status: "Prototype",
+      status: "Terminé",
       featured: true,
       description:
         "Projet mené à deux en vue d'un concours : j'ai pris en charge l'intégralité du front-end, mon binôme le back-end. Interface de supervision destinée aux analystes d'un organisme d'assurance santé, avec un contrôle d'accès à trois rôles (administrateur, superviseur, analyste). Au-delà du tableau de bord et de la gestion des dossiers, la console explique chaque score facteur par facteur, simule l'effet d'un autre seuil de déclenchement, cartographie les réseaux de fraude entre assurés et établissements, et journalise chaque décision dans une piste d'audit.",

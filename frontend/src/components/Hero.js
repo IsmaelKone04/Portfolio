@@ -107,7 +107,7 @@ const Hero = () => {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-4 rounded-full transform transition-all duration-300 hover:scale-105"
+              className="bg-transparent border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-4 rounded-full transform transition-all duration-300 hover:scale-105"
               onClick={() => scrollToSection('contact')}
             >
               Me contacter

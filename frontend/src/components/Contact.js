@@ -26,7 +26,7 @@ const Contact = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0 }
     );
 
     if (sectionRef.current) {

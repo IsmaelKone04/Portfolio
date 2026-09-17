@@ -30,7 +30,7 @@ const Skills = () => {
           }, 500);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0 }
     );
 
     if (sectionRef.current) {
