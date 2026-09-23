@@ -595,9 +595,9 @@ export const studentData = {
       status: "Terminé",
       featured: true,
       description:
-        "Application web de gestion des quelque 300 puits pétroliers forés en Côte d'Ivoire depuis 1957. Le référentiel national vivait dans un classeur Excel : je l'ai porté sur une base PostgreSQL/PostGIS pilotée par une interface web complète — recherche multicritère, exports Excel/CSV/PDF, rapports statistiques et financiers, API REST documentée et journal d'audit retraçant chaque modification.",
+        "Application web de gestion des quelque 300 puits pétroliers forés en Côte d'Ivoire depuis 1957. Le référentiel national vivait dans un classeur Excel : je l'ai porté sur une base PostgreSQL/PostGIS pilotée par une interface web complète — recherche multicritère, carte interactive des puits géolocalisés avec filtres croisés, exports Excel/CSV/PDF, rapports statistiques et financiers, API REST documentée et journal d'audit retraçant chaque modification.",
       impact:
-        "Le fonds documentaire est passé d'un tableur à un système d'information : trois profils d'accès (administrateur, gestionnaire, lecteur), traçabilité complète des modifications, et un pipeline d'import Excel récurrent qui simule l'opération avant de l'appliquer et met en quarantaine les lignes douteuses pour arbitrage, plutôt que de corrompre le référentiel.",
+        "Le fonds documentaire est passé d'un tableur à un système d'information : trois profils d'accès (administrateur, gestionnaire, lecteur), traçabilité complète des modifications, et un pipeline d'import Excel récurrent qui simule l'opération avant de l'appliquer et met en quarantaine les lignes douteuses pour arbitrage, plutôt que de corrompre le référentiel. J'ai ensuite fluidifié l'interface avec HTMX : listes filtrées, tri par colonne et formulaires de création/modification (en modale) se mettent à jour sans rechargement de page ni JavaScript lourd, chaque vue conservant une réponse HTML complète pour rester utilisable sans JS. La carte a gagné des filtres bloc/opérateur/statut appliqués côté client sans jamais réinitialiser le zoom, et l'application dispose désormais d'un mode sombre.",
       technologies: [
         "Python 3.12",
         "Django 5",
