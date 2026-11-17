@@ -220,7 +220,7 @@ const Contact = () => {
 
         {/* Pied de page */}
         <div className="mt-16 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} {personal.name} — {personal.title} · {personal.location}
+          © {new Date().getFullYear()} {personal.name}
         </div>
       </div>
     </section>
