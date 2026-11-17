@@ -7,10 +7,15 @@ import { Textarea } from './ui/textarea';
 import { useToast } from '../hooks/use-toast';
 import { studentData } from '../data/mockData';
 
+// Worker Cloudflare (api/) — voir REACT_APP_API_URL dans .env.local. Pas encore
+// de valeur en production : le formulaire retombe sur le mailto en cas d'échec.
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { personal } = studentData;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,18 +26,30 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulation d'envoi (remplacer par une vraie API plus tard)
-    setTimeout(() => {
+    try {
+      if (!API_URL) throw new Error('api_url_missing');
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) throw new Error('request_failed');
+
       toast({
         title: 'Message envoyé avec succès',
         description: 'Je vous répondrai dans les plus brefs délais.',
       });
       setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: "Impossible d'envoyer le message",
+        description: `Écrivez-moi directement à ${personal.email} en attendant.`,
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 2000);
+    }
   };
-
-  const { personal } = studentData;
 
   const formatHandle = (url) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/+$/, '');
 

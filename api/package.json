@@ -1,0 +1,25 @@
+{
+  "name": "portfolio-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --ip 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply portfolio-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply portfolio-db --remote",
+    "export:mockdata": "node scripts/export-mockdata.mjs",
+    "generate:seed": "node scripts/generate-seed.mjs",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.6.14",
+    "drizzle-orm": "^0.36.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "drizzle-kit": "^0.28.1",
+    "typescript": "^5.7.2",
+    "wrangler": "^3.90.0"
+  }
+}

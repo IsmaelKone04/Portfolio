@@ -1,0 +1,18 @@
+name = "portfolio-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# Créée avec : wrangler d1 create portfolio-db
+# Puis coller le database_id renvoyé ci-dessous.
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-db"
+database_id = "030b8a29-5d1d-442a-af9b-cbc2af7012b1"
+migrations_dir = "drizzle"
+
+[vars]
+ENVIRONMENT = "production"
+
+# Routes publiques en lecture (/api/*) servies par ce Worker.
+# /admin/* reste protégé par une règle Cloudflare Access configurée
+# dans le dashboard Cloudflare Zero Trust, pas dans ce fichier.
