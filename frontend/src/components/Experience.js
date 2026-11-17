@@ -1,12 +1,23 @@
-import React from 'react';
-import { MapPin, Calendar, Trophy, Check, FlaskConical, Boxes, ListChecks, Building2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Calendar, Trophy, Check, ChevronDown, FlaskConical, Boxes, ListChecks, Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import { studentData } from '../data/mockData';
 
 const METHOD_ICONS = [FlaskConical, Boxes, ListChecks];
 
-const ExperienceCard = ({ experience, isLast }) => (
+// Au-delà de ce nombre, les réalisations suivantes sont repliées par défaut
+// (tout reste présent, rien n'est supprimé — voir le bouton "Voir plus").
+const VISIBLE_ACHIEVEMENTS = 3;
+
+const ExperienceCard = ({ experience, isLast }) => {
+  const [expanded, setExpanded] = useState(false);
+  const achievements = experience.achievements || [];
+  const hasMore = achievements.length > VISIBLE_ACHIEVEMENTS;
+  const visibleAchievements = expanded ? achievements : achievements.slice(0, VISIBLE_ACHIEVEMENTS);
+
+  return (
   <div className="relative">
     {!isLast && (
       <div className="absolute left-6 top-16 h-full w-px bg-border" aria-hidden="true" />
@@ -44,26 +55,43 @@ const ExperienceCard = ({ experience, isLast }) => (
       <CardContent>
         <p className="leading-[1.65] text-muted-foreground">{experience.description}</p>
 
-        {experience.achievements?.length > 0 && (
+        {achievements.length > 0 && (
           <div className="mt-5 space-y-3">
             <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <Trophy className="h-4 w-4 text-highlight" strokeWidth={1.75} aria-hidden="true" />
               Principales réalisations
             </h4>
             <ul className="space-y-2">
-              {experience.achievements.map((achievement) => (
+              {visibleAchievements.map((achievement) => (
                 <li key={achievement} className="flex items-start gap-3 text-sm text-muted-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" strokeWidth={1.75} aria-hidden="true" />
                   <span className="leading-[1.65]">{achievement}</span>
                 </li>
               ))}
             </ul>
+            {hasMore && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setExpanded((prev) => !prev)}
+                className="h-auto gap-1.5 p-0 text-sm font-medium text-highlight hover:bg-transparent hover:text-highlight/80"
+              >
+                {expanded ? 'Voir moins' : `Voir ${achievements.length - VISIBLE_ACHIEVEMENTS} autre${achievements.length - VISIBLE_ACHIEVEMENTS > 1 ? 's' : ''} réalisation${achievements.length - VISIBLE_ACHIEVEMENTS > 1 ? 's' : ''}`}
+                <ChevronDown
+                  className={`h-3.5 w-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                />
+              </Button>
+            )}
           </div>
         )}
       </CardContent>
     </Card>
-  </div>
-);
+    </div>
+  );
+};
 
 const Experience = () => {
   return (

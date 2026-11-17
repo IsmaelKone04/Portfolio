@@ -12,6 +12,7 @@ import {
   Mail,
   Phone,
   Linkedin,
+  ChevronDown,
 } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
@@ -29,10 +30,17 @@ const groups = [...studentData.experience, ...(studentData.projectGroups || [])]
   }))
   .filter((group) => group.projects.length > 0);
 
+// Au-delà de cette longueur, la description est repliée par défaut (rien n'est
+// supprimé : le texte complet et le résultat restent accessibles via "Voir les détails").
+const DESCRIPTION_TRUNCATE_LENGTH = 140;
+
 const ProjectCard = ({ project }) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const images = project.images || [];
   const hasMedia = images.length > 0 || Boolean(project.video);
+  const hasExpandableContent =
+    Boolean(project.impact) || (project.description?.length ?? 0) > DESCRIPTION_TRUNCATE_LENGTH;
 
   return (
     <Card className="flex h-full flex-col overflow-hidden border-border">
@@ -75,13 +83,36 @@ const ProjectCard = ({ project }) => {
 
       <CardContent className="flex flex-1 flex-col pt-5">
         <h3 className="text-lg font-semibold text-foreground">{project.title}</h3>
-        <p className="mt-2 leading-[1.65] text-muted-foreground">{project.description}</p>
+        <p
+          className={`mt-2 leading-[1.65] text-muted-foreground ${
+            !expanded && hasExpandableContent ? 'line-clamp-2' : ''
+          }`}
+        >
+          {project.description}
+        </p>
 
-        {project.impact && (
+        {expanded && project.impact && (
           <div className="mt-4 rounded-r-lg border-l-2 border-primary bg-accent/40 px-4 py-3">
             <p className="mb-1 text-sm font-semibold text-highlight">Résultat</p>
             <p className="text-sm leading-[1.65] text-foreground">{project.impact}</p>
           </div>
+        )}
+
+        {hasExpandableContent && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setExpanded((prev) => !prev)}
+            className="mt-2 h-auto w-fit gap-1.5 p-0 text-sm font-medium text-highlight hover:bg-transparent hover:text-highlight/80"
+          >
+            {expanded ? 'Réduire' : 'Voir les détails'}
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`}
+              strokeWidth={1.75}
+              aria-hidden="true"
+            />
+          </Button>
         )}
 
         {project.technologies.length > 0 && (

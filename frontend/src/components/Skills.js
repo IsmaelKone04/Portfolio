@@ -1,6 +1,6 @@
 import React from 'react';
 import { Code2, Layers, Server, Wrench, BrainCircuit } from 'lucide-react';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui/accordion';
+import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { studentData } from '../data/mockData';
 
 const GROUPS = [
@@ -11,53 +11,58 @@ const GROUPS = [
   { key: 'ai', title: 'IA appliquée', icon: BrainCircuit },
 ];
 
-const SkillGroup = ({ title, icon: Icon, skills }) => {
-  const withDetails = skills.filter((skill) => skill.details?.length > 0);
+const SkillPill = ({ skill }) => {
+  const hasDetails = skill.details?.length > 0;
+
+  if (!hasDetails) {
+    return (
+      <span className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground">
+        {skill.name}
+      </span>
+    );
+  }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent">
-          <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
-        </div>
-        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <span
-            key={skill.name}
-            className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
-          >
-            {skill.name}
-          </span>
-        ))}
-      </div>
-
-      {withDetails.length > 0 && (
-        <Accordion type="single" collapsible className="mt-5 border-t border-border">
-          {withDetails.map((skill) => (
-            <AccordionItem key={skill.name} value={skill.name}>
-              <AccordionTrigger className="text-sm text-foreground">
-                {skill.name}
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul className="space-y-2">
-                  {skill.details.map((detail) => (
-                    <li key={detail} className="flex gap-2.5 text-sm leading-[1.65] text-muted-foreground">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-highlight" aria-hidden="true" />
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground transition-colors hover:border-primary/40 hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        >
+          {skill.name}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <p className="text-sm font-semibold text-foreground">{skill.name}</p>
+        <ul className="mt-2 space-y-2">
+          {skill.details.map((detail) => (
+            <li key={detail} className="flex gap-2.5 text-sm leading-[1.65] text-muted-foreground">
+              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-highlight" aria-hidden="true" />
+              <span>{detail}</span>
+            </li>
           ))}
-        </Accordion>
-      )}
-    </div>
+        </ul>
+      </PopoverContent>
+    </Popover>
   );
 };
+
+const SkillGroup = ({ title, icon: Icon, skills }) => (
+  <div className="rounded-2xl border border-border bg-card p-6">
+    <div className="flex items-center gap-3">
+      <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent">
+        <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+      </div>
+      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+    </div>
+
+    <div className="mt-4 flex flex-wrap gap-2">
+      {skills.map((skill) => (
+        <SkillPill key={skill.name} skill={skill} />
+      ))}
+    </div>
+  </div>
+);
 
 const Skills = () => {
   return (
