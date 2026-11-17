@@ -11,9 +11,44 @@ export const studentData = {
     github: "https://github.com/ismaelkone04",
     linkedin: "https://www.linkedin.com/in/cheick-ismaël-koné-772a77333",
     avatar: "/images/moi.jpg",
+    displayName: "Ismaël Koné",
+    subtitle: "Développeur logiciel (PHP, Python, TypeScript, Java) et administrateur ITSM / DevOps (GLPI, Docker, Keycloak). Étudiant en 3e année de Génie Logiciel à l'Université de Technologie d'Abidjan.",
     tagline: "Entre exploitation système et développement : je construis des plateformes qui tiennent en production.",
-    bio: "Étudiant en 3ᵉ année de Licence Informatique — spécialité Génie Logiciel — à l'Université de Technologie d'Abidjan. Recruté comme stagiaire technicien support chez YeshiGroup (DSI), j'y ai conduit des chantiers qui ont largement dépassé le support N1 : migration de la plateforme ITSM GLPI 10 vers 11 pour un groupe présent dans 14 pays, conception d'un socle Docker Compose (GLPI, MariaDB, reverse-proxy nginx, HTTPS), développement de 4 plugins métier en PHP, mise en place d'une authentification unique Microsoft via Keycloak, et remise en service d'un helpdesk de production après une cyberattaque. Ma méthode : tester plutôt que supposer, privilégier les mécanismes natifs et les développements réversibles, et avancer par étapes validées. Je cherche aujourd'hui à poursuivre sur cette double compétence système et développement."
+    bio: "Étudiant en 3ᵉ année de Licence Informatique — spécialité Génie Logiciel — à l'Université de Technologie d'Abidjan. Recruté comme stagiaire technicien support chez YeshiGroup (DSI), j'y ai conduit des chantiers qui ont largement dépassé le support N1 : migration de la plateforme ITSM GLPI 10 vers 11 pour un groupe présent dans 14 pays, conception d'un socle Docker Compose (GLPI, MariaDB, reverse-proxy nginx, HTTPS), développement de 4 plugins métier en PHP, mise en place d'une authentification unique Microsoft via Keycloak, et remise en service d'un helpdesk de production après une cyberattaque. Ma méthode : tester plutôt que supposer, privilégier les mécanismes natifs et les développements réversibles, et avancer par étapes validées. Je cherche aujourd'hui à poursuivre sur cette double compétence système et développement.",
+    // Carte de métriques affichée dans le Hero — chiffres validés, ne pas en ajouter d'autres ici.
+    heroHighlight: {
+      title: "Stage — DSI de YeshiGroup (juin – août 2026)",
+      stats: [
+        { value: "10 → 11", label: "Migration GLPI sur Docker Compose" },
+        { value: "4", label: "Plugins PHP développés" },
+        { value: "SSO", label: "Microsoft via Keycloak (validé en laboratoire)" },
+        { value: "14", label: "Pays couverts par la plateforme" }
+      ]
+    }
   },
+
+  // Cartes "Ce que je fais" affichées en tête de la section Qui suis-je (About.js).
+  // `icon` renvoie à une clé mappée vers un composant lucide-react dans le composant.
+  whatIDo: [
+    {
+      icon: "itsm",
+      title: "Administration ITSM et DevOps",
+      description:
+        "Déploiement, migration et exploitation de GLPI sur Docker Compose, authentification unique et plugins sur mesure."
+    },
+    {
+      icon: "dev",
+      title: "Développement logiciel",
+      description:
+        "Applications complètes en PHP, Python, TypeScript et Java, du back-end à l'interface web et mobile."
+    },
+    {
+      icon: "ai",
+      title: "IA appliquée",
+      description:
+        "Prompting structuré, analyse de données et création de contenu, avec une validation humaine systématique."
+    }
+  ],
 
   // Niveaux calibrés sur les dépôts réellement livrés (voir `projects`), pas sur des
   // intentions : un langage n'est haut que s'il porte au moins un projet mis en production
@@ -402,6 +437,16 @@ export const studentData = {
           "Travailler à distance sur un serveur ou dans un conteneur"
         ]
       }
+    ],
+
+    // Pratique de l'IA en outil de travail — programme AiCE, voir `academic` plus bas.
+    // Pas de `details` : aucun chiffre ou usage précis au-delà de ce qui est déjà
+    // documenté dans la formation AiCE, pour ne rien inventer.
+    ai: [
+      { name: "Prompting structuré", icon: "", details: [] },
+      { name: "Analyse de données", icon: "", details: [] },
+      { name: "Contenu génératif", icon: "", details: [] },
+      { name: "Vibe coding", icon: "", details: [] }
     ]
   },
 
@@ -871,7 +916,12 @@ export const studentData = {
     // Atelier-. Extrait dans son propre dépôt le 30/07/2026, corrigé, restructuré
     // (public/ + src/) et documenté. La branche Examen d'Atelier- a été supprimée
     // le même jour : elle exposait encore un dump avec des données personnelles.
-    // Dépôt privé pour l'instant — à basculer en public après test avec MySQL.
+    // Testé de bout en bout avec une vraie base MySQL le 17/09/2026 (connexion,
+    // fiches enfants, messagerie, faille IDOR corrigée) puis dépôt rendu public.
+    // Refonte complète menée entre le 16 et le 18/09/2026 : interface (sidebar,
+    // mode sombre), vrai cycle de contrat/avis, suite de tests PHPUnit exécutée
+    // par une CI GitHub Actions à chaque push, et version Dockerisée — chaque
+    // étape testée de bout en bout (curl, captures d'écran, docker compose up).
     {
       id: 19,
       groupId: "academique",
@@ -881,10 +931,19 @@ export const studentData = {
       status: "Terminé",
       featured: false,
       description:
-        "Plateforme permettant à des parents de trouver une garde d'enfants : inscription séparée pour les parents et les nounous, profils consultables, fiches enfants (âge, allergies, besoins spécifiques), messagerie interne entre les deux parties et suivi des contrats. Écrit en PHP sans framework, volontairement : l'exercice consistait à implémenter soi-même le routage, les sessions, les requêtes préparées et le hachage des mots de passe.",
+        "Plateforme permettant à des parents de trouver une garde d'enfants : inscription séparée pour les parents et les nounous, recherche filtrée par ville/service/tarif, fiches enfants (âge, allergies, besoins spécifiques), messagerie interne entre les deux parties, et un vrai cycle de contrat (proposition, acceptation ou refus, clôture, avis noté). Écrit en PHP sans framework, volontairement : l'exercice consistait à implémenter soi-même le routage, les sessions, les requêtes préparées et le hachage des mots de passe.",
       impact:
-        "C'est le projet sur lequel j'ai le plus appris en le relisant deux ans après. La page de modification d'une fiche enfant chargeait la ligne sur le seul identifiant de l'URL, sans vérifier à qui elle appartenait : n'importe quel parent pouvait consulter et modifier le dossier de l'enfant d'une autre famille. L'inscription des nounous enregistrait aussi le mot de passe en clair alors que celle des parents le hachait. J'ai également réorganisé le projet, dont les trente fichiers vivaient tous à la racine : la connexion à la base et les identifiants MySQL sont désormais hors de la racine web, où aucune URL ne peut les atteindre. Avoir trouvé ces défauts moi-même, les avoir corrigés et documentés dans le README m'a plus appris que le développement initial.",
-      technologies: ["PHP 8", "MySQL", "PDO", "HTML / CSS", "JavaScript"],
+        "C'est le projet sur lequel j'ai le plus appris en le relisant deux ans après. La page de modification d'une fiche enfant chargeait la ligne sur le seul identifiant de l'URL, sans vérifier à qui elle appartenait : n'importe quel parent pouvait consulter et modifier le dossier de l'enfant d'une autre famille. L'inscription des nounous enregistrait aussi le mot de passe en clair alors que celle des parents le hachait. J'ai réorganisé le projet, dont les trente fichiers vivaient tous à la racine : la connexion à la base et les identifiants MySQL sont désormais hors de la racine web. Au-delà de la correction des failles, j'ai ensuite repris l'interface (tableau de bord avec navigation latérale, mode sombre, pagination) et ajouté ce qui manquait pour que ce soit une vraie plateforme : anti-bruteforce et réinitialisation de mot de passe par jeton à usage unique, cycle de contrat complet avec avis/notes, export CSV, une suite de tests PHPUnit couvrant la régression IDOR et le cycle contrat/avis, exécutée automatiquement par une CI GitHub Actions à chaque push, et une version Dockerisée (docker compose up --build) testée de bout en bout avant publication.",
+      technologies: [
+        "PHP 8",
+        "MySQL",
+        "PDO",
+        "HTML / CSS",
+        "JavaScript",
+        "PHPUnit",
+        "Docker Compose",
+        "GitHub Actions"
+      ],
       images: [],
       video: null,
       github: "https://github.com/IsmaelKone04/kinougarde",
@@ -979,7 +1038,7 @@ export const studentData = {
       position: "Stagiaire Technicien Support Informatique",
       duration: "01 Juin 2026 - 31 Août 2026",
       location: "Abidjan - Marcory Zone 4, CI",
-      current: true,
+      current: false,
       description:
         "Recruté comme stagiaire support, j'ai en réalité conduit des chantiers d'ingénierie système et de développement sur la plateforme ITSM centrale d'un groupe multi-filiales présent dans 14 pays : migration, conteneurisation, développement de plugins métier, sécurisation par SSO et gestion d'incident.",
       achievements: [
@@ -1080,6 +1139,24 @@ export const studentData = {
     },
     {
       id: 2,
+      institution: "AiCE — MTN × ALX Africa",
+      degree: "Formation IA appliquée (AI Career Essentials)",
+      duration: "Septembre 2026 - Novembre 2026",
+      location: "À distance",
+      description:
+        "6 cours et 6 projets de maîtrise sur l'usage professionnel de l'IA — prompting structuré, éthique et responsabilité, création de contenus, analyse de données, personal branding. 100 % aux quiz.",
+      courses: [
+        "Les bases de l'IA pour le travail",
+        "L'art du prompt",
+        "Éthique et responsabilité",
+        "L'IA pour les contenus professionnels",
+        "Analyser les données et décider",
+        "Valoriser son profil et son portfolio"
+      ],
+      logo: "🧠"
+    },
+    {
+      id: 3,
       institution: "Collège Privé Jules Ronsard 2",
       degree: "Baccalauréat Série D",
       duration: "2022 - 2023",

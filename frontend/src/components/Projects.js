@@ -1,4 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import {
+  Building2,
+  Calendar,
+  ImageOff,
+  Images,
+  Github,
+  ExternalLink,
+  Container,
+  Lock,
+  BadgeCheck,
+  Mail,
+  Phone,
+  Linkedin,
+} from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -15,401 +29,293 @@ const groups = [...studentData.experience, ...(studentData.projectGroups || [])]
   }))
   .filter((group) => group.projects.length > 0);
 
-const Projects = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [filter, setFilter] = useState('all');
-  const sectionRef = useRef(null);
+const ProjectCard = ({ project }) => {
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const images = project.images || [];
+  const hasMedia = images.length > 0 || Boolean(project.video);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const visibleGroups =
-    filter === 'all' ? groups : groups.filter((group) => group.exp.id === filter);
-
-  const ProjectCard = ({ project }) => {
-    const [galleryOpen, setGalleryOpen] = useState(false);
-    const images = project.images || [];
-    const hasMedia = images.length > 0 || Boolean(project.video);
-
-    return (
-    <Card className="group h-full flex flex-col bg-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 overflow-hidden">
-      <div className="relative overflow-hidden">
+  return (
+    <Card className="flex h-full flex-col overflow-hidden border-border">
+      <div className="relative">
         {images.length > 0 ? (
-          <img
-            src={images[0]}
-            alt={project.title}
-            className="w-full h-48 object-cover transition-all duration-700 group-hover:scale-110"
-          />
+          <img src={images[0]} alt={project.title} className="h-48 w-full object-cover" />
         ) : (
-          // Pas de capture disponible : en-tête graphique portant l'emblème du chantier.
-          <div className="w-full h-48 bg-gradient-to-br from-blue-500 via-indigo-600 to-indigo-800 flex items-center justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/25"></div>
-            <span className="text-6xl drop-shadow-lg transition-transform duration-700 group-hover:scale-110">
-              {project.emoji}
-            </span>
+          // Pas de capture disponible pour ce chantier.
+          <div className="flex h-48 w-full items-center justify-center bg-muted">
+            <ImageOff className="h-8 w-8 text-muted-foreground" strokeWidth={1.75} aria-hidden="true" />
           </div>
         )}
 
-        {/* Statut */}
-        <div className="absolute top-4 right-4">
-          <Badge className={`${project.status === 'Terminé'
-            ? 'bg-green-500 hover:bg-green-600'
-            : 'bg-orange-500 hover:bg-orange-600'} text-white px-3 py-1`}>
+        <div className="absolute top-3 right-3">
+          <Badge
+            className={
+              project.status === 'Terminé'
+                ? 'bg-success text-success-foreground hover:bg-success'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary'
+            }
+          >
             {project.status}
           </Badge>
         </div>
 
-        {/* Catégorie */}
-        <div className="absolute top-4 left-4">
-          <Badge variant="secondary" className="bg-white/90 text-gray-800 px-3 py-1">
+        <div className="absolute top-3 left-3">
+          <Badge variant="secondary" className="bg-background/90 text-foreground">
             {project.category}
           </Badge>
         </div>
 
-        {/* Compteur de captures supplémentaires */}
         {images.length > 1 && (
-          <div className="absolute bottom-4 right-4">
-            <Badge variant="secondary" className="bg-black/60 text-white px-2 py-1">
+          <div className="absolute bottom-3 right-3">
+            <Badge variant="secondary" className="bg-background/80 text-foreground">
               +{images.length - 1}
             </Badge>
           </div>
         )}
       </div>
 
-      <CardContent className="p-6 flex flex-col flex-1">
-        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
-          {project.title}
-        </h3>
+      <CardContent className="flex flex-1 flex-col pt-5">
+        <h3 className="text-lg font-semibold text-foreground">{project.title}</h3>
+        <p className="mt-2 leading-[1.65] text-muted-foreground">{project.description}</p>
 
-        <p className="text-gray-600 mb-4 leading-relaxed">
-          {project.description}
-        </p>
-
-        {/* Résultat obtenu */}
         {project.impact && (
-          <div className="mb-5 border-l-4 border-blue-500 bg-blue-50/70 rounded-r-lg px-4 py-3">
-            <p className="text-sm font-semibold text-blue-800 mb-1">Résultat</p>
-            <p className="text-sm text-gray-700 leading-relaxed">{project.impact}</p>
+          <div className="mt-4 rounded-r-lg border-l-2 border-primary bg-accent/40 px-4 py-3">
+            <p className="mb-1 text-sm font-semibold text-highlight">Résultat</p>
+            <p className="text-sm leading-[1.65] text-foreground">{project.impact}</p>
           </div>
         )}
 
-        {/* Technologies */}
         {project.technologies.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {project.technologies.map((tech, techIndex) => (
-              <Badge
-                key={techIndex}
-                variant="outline"
-                className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 transition-colors duration-200"
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.technologies.map((tech) => (
+              <span
+                key={tech}
+                className="rounded-full border border-border bg-secondary px-2.5 py-1 text-xs text-secondary-foreground"
               >
                 {tech}
-              </Badge>
+              </span>
             ))}
           </div>
         )}
 
-        {/* Galerie de captures et/ou vidéo de démo */}
         {hasMedia && (
           <Button
             variant="outline"
             onClick={() => setGalleryOpen(true)}
-            className="mb-4 border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-all duration-300"
+            className="mt-4 w-fit gap-2"
           >
-            🖼️ Galerie
+            <Images className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+            Galerie
           </Button>
         )}
 
-        {/* Liens — les chantiers internes n'ont ni dépôt public ni démonstration */}
-        <div className="mt-auto">
+        <div className="mt-5">
           {project.github || project.demo || project.dockerhub ? (
             <div className="flex flex-wrap gap-3">
               {project.github && (
-                <Button
-                  asChild
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
-                >
+                <Button asChild className="flex-1 gap-2">
                   <a href={project.github} target="_blank" rel="noopener noreferrer">
-                    💻 Code
+                    <Github className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                    Code
                   </a>
                 </Button>
               )}
-
               {project.demo && (
-                <Button
-                  asChild
-                  variant="outline"
-                  className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
-                >
+                <Button asChild variant="outline" className="flex-1 gap-2">
                   <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                    🚀 Démo
+                    <ExternalLink className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                    Démo
                   </a>
                 </Button>
               )}
-
-              {/* Image publiée sur un registre : lien vérifiable vers le livrable */}
               {project.dockerhub && (
-                <Button
-                  asChild
-                  variant="outline"
-                  className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
-                >
+                <Button asChild variant="outline" className="flex-1 gap-2">
                   <a href={project.dockerhub} target="_blank" rel="noopener noreferrer">
-                    🐳 Image Docker
+                    <Container className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                    Image Docker
                   </a>
                 </Button>
               )}
             </div>
           ) : (
-            <p className="flex gap-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 leading-relaxed">
-              <span aria-hidden="true" className="shrink-0">🔒</span>
+            <p className="flex gap-2 rounded-lg border border-border bg-secondary px-4 py-3 text-sm leading-[1.65] text-muted-foreground">
+              <Lock className="h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
               <span>
-                Code non public — je ne peux pas le diffuser, mais je peux le présenter
-                et le faire tourner devant vous lors d'un entretien.
+                Code non public — je ne peux pas le diffuser, mais je peux le présenter et le
+                faire tourner devant vous lors d'un entretien.
               </span>
             </p>
           )}
         </div>
       </CardContent>
 
-      {hasMedia && (
-        <ProjectGallery
-          project={project}
-          open={galleryOpen}
-          onOpenChange={setGalleryOpen}
-        />
-      )}
+      {hasMedia && <ProjectGallery project={project} open={galleryOpen} onOpenChange={setGalleryOpen} />}
     </Card>
-    );
-  };
-
-  // En-tête d'un groupe : rappelle le stage dont sont issues les réalisations qui suivent.
-  const GroupHeader = ({ exp, count }) => (
-    <div className="mb-8">
-      <div className="flex flex-wrap items-center gap-4 mb-4">
-        <div className="w-14 h-14 shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-          {exp.logo}
-        </div>
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900">
-            {exp.shortName || exp.company}
-          </h3>
-          <p className="text-sm text-gray-500 flex flex-wrap items-center gap-2">
-            {exp.position} • 📅 {exp.duration}
-            {exp.current && (
-              <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs px-2 py-0.5">
-                En cours
-              </Badge>
-            )}
-          </p>
-        </div>
-        <Badge variant="outline" className="ml-auto border-blue-200 bg-blue-50 text-blue-700 px-3 py-1">
-          {count} réalisation{count > 1 ? 's' : ''}
-        </Badge>
-      </div>
-      <div className="h-px bg-gradient-to-r from-blue-500 via-indigo-300 to-transparent"></div>
-    </div>
   );
+};
 
-  // Personnes pouvant attester du travail présenté dans ce groupe.
-  // Chaque coordonnée est optionnelle : on n'affiche que ce qui est renseigné,
-  // pour ne jamais publier plus que ce que le référent a accepté.
-  const GroupReferences = ({ groupId }) => {
-    const refs = (studentData.references || []).filter((r) => r.groupId === groupId);
-
-    if (refs.length === 0) {
-      return studentData.referencesFallback ? (
-        <p className="mt-8 text-sm text-gray-500 flex items-center gap-2">
-          <span aria-hidden="true">✅</span>
-          {studentData.referencesFallback}
-        </p>
-      ) : null;
-    }
-
-    return (
-      <div className="mt-10 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6">
-        <p className="text-sm font-semibold text-emerald-800 mb-4 flex items-center gap-2">
-          <span aria-hidden="true">✅</span>
-          {refs.length > 1 ? 'Personnes de référence' : 'Personne de référence'}
-        </p>
-
-        <div className="grid sm:grid-cols-2 gap-4">
-          {refs.map((ref, index) => (
-            <div key={index} className="bg-white/70 rounded-xl p-4 border border-emerald-100">
-              <p className="font-semibold text-gray-900">{ref.name}</p>
-              {(ref.role || ref.company) && (
-                <p className="text-sm text-gray-600 mt-0.5">
-                  {[ref.role, ref.company].filter(Boolean).join(' — ')}
-                </p>
-              )}
-
-              <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm">
-                {ref.email && (
-                  <a
-                    href={`mailto:${ref.email}`}
-                    className="text-emerald-700 hover:text-emerald-900 underline underline-offset-2"
-                  >
-                    ✉️ {ref.email}
-                  </a>
-                )}
-                {ref.phone && (
-                  <a
-                    href={`tel:${ref.phone.replace(/\s/g, '')}`}
-                    className="text-emerald-700 hover:text-emerald-900 underline underline-offset-2"
-                  >
-                    📞 {ref.phone}
-                  </a>
-                )}
-                {ref.linkedin && (
-                  <a
-                    href={ref.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-emerald-700 hover:text-emerald-900 underline underline-offset-2"
-                  >
-                    💼 LinkedIn
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+// En-tête d'un groupe : rappelle le stage/contexte dont sont issues les réalisations qui suivent.
+const GroupHeader = ({ exp, count }) => (
+  <div className="mb-6">
+    <div className="mb-4 flex flex-wrap items-center gap-4">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent">
+        <Building2 className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
       </div>
-    );
-  };
+      <div>
+        <h3 className="text-lg font-semibold text-foreground">{exp.shortName || exp.company}</h3>
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <span>{exp.position}</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Calendar className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+            {exp.duration}
+          </span>
+        </p>
+      </div>
+      <Badge variant="outline" className="ml-auto border-border bg-secondary text-secondary-foreground">
+        {count} réalisation{count > 1 ? 's' : ''}
+      </Badge>
+    </div>
+    <div className="h-px bg-border" />
+  </div>
+);
+
+// Personnes pouvant attester du travail présenté dans ce groupe.
+const GroupReferences = ({ groupId }) => {
+  const refs = (studentData.references || []).filter((r) => r.groupId === groupId);
+
+  if (refs.length === 0) {
+    return studentData.referencesFallback ? (
+      <p className="mt-8 flex items-center gap-2 text-sm text-muted-foreground">
+        <BadgeCheck className="h-4 w-4 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+        {studentData.referencesFallback}
+      </p>
+    ) : null;
+  }
 
   return (
-    <section id="projects" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
+    <div className="mt-8 rounded-2xl border border-border bg-card p-6">
+      <p className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+        <BadgeCheck className="h-4 w-4 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+        {refs.length > 1 ? 'Personnes de référence' : 'Personne de référence'}
+      </p>
 
-      {/* Background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full opacity-30 animate-pulse blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-48 h-48 bg-gradient-to-tr from-purple-100 to-pink-100 rounded-full opacity-30 animate-bounce blur-2xl"></div>
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Mes Réalisations
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Les travaux que j'ai menés, regroupés par mission — de la migration d'une
-              plateforme ITSM multi-pays au développement d'outils métier
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mt-6"></div>
-          </div>
-
-          {/* Filtre par mission */}
-          <div className="flex flex-wrap justify-center gap-3 mb-16">
-            <Button
-              onClick={() => setFilter('all')}
-              variant={filter === 'all' ? 'default' : 'outline'}
-              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
-                filter === 'all'
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
-                  : 'border-blue-500 text-blue-600 hover:bg-blue-50'
-              }`}
-            >
-              Toutes
-              <span className="ml-2 text-sm opacity-70">({studentData.projects.length})</span>
-            </Button>
-
-            {groups.map(({ exp, projects }) => (
-              <Button
-                key={exp.id}
-                onClick={() => setFilter(exp.id)}
-                variant={filter === exp.id ? 'default' : 'outline'}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
-                  filter === exp.id
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
-                    : 'border-blue-500 text-blue-600 hover:bg-blue-50'
-                }`}
-              >
-                {exp.shortName || exp.company}
-                <span className="ml-2 text-sm opacity-70">({projects.length})</span>
-              </Button>
-            ))}
-          </div>
-
-          {/* Groupes de réalisations */}
-          <div className="space-y-20">
-            {visibleGroups.map(({ exp, projects }) => (
-              <div key={exp.id}>
-                <GroupHeader exp={exp} count={projects.length} />
-
-                {/* Chiffres clés propres à ce stage */}
-                {exp.stats?.length > 0 && (
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-                    {exp.stats.map((item, index) => (
-                      <div
-                        key={index}
-                        className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300"
-                      >
-                        <div className="text-3xl mb-2" aria-hidden="true">{item.icon}</div>
-                        <div className="text-3xl font-bold text-blue-600 mb-1">{item.value}</div>
-                        <div className="text-sm text-gray-600 font-medium leading-snug">{item.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="grid md:grid-cols-2 gap-8">
-                  {projects.map((project, index) => (
-                    <div
-                      key={project.id}
-                      className={`transform transition-all duration-700 ${
-                        isVisible
-                          ? 'translate-y-0 opacity-100'
-                          : 'translate-y-20 opacity-0'
-                      }`}
-                      style={{ transitionDelay: `${index * 150}ms` }}
-                    >
-                      <ProjectCard project={project} />
-                    </div>
-                  ))}
-                </div>
-
-                <GroupReferences groupId={exp.id} />
-              </div>
-            ))}
-          </div>
-
-          {/* Call to action */}
-          <div className="mt-20 text-center">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Envie d'en savoir plus ?
-              </h3>
-              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                Je détaille volontiers l'architecture, les choix techniques et les impasses
-                rencontrées sur chacun de ces chantiers. N'hésitez pas à me contacter.
+      <div className="grid gap-4 sm:grid-cols-2">
+        {refs.map((ref) => (
+          <div key={ref.name} className="rounded-xl border border-border bg-secondary p-4">
+            <p className="font-medium text-foreground">{ref.name}</p>
+            {(ref.role || ref.company) && (
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                {[ref.role, ref.company].filter(Boolean).join(' — ')}
               </p>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold px-8 py-4 rounded-full transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Me contacter
-                <span className="ml-2">📧</span>
-              </Button>
+            )}
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
+              {ref.email && (
+                <a
+                  href={`mailto:${ref.email}`}
+                  className="inline-flex items-center gap-1.5 text-highlight hover:underline"
+                >
+                  <Mail className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  {ref.email}
+                </a>
+              )}
+              {ref.phone && (
+                <a
+                  href={`tel:${ref.phone.replace(/\s/g, '')}`}
+                  className="inline-flex items-center gap-1.5 text-highlight hover:underline"
+                >
+                  <Phone className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  {ref.phone}
+                </a>
+              )}
+              {ref.linkedin && (
+                <a
+                  href={ref.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-highlight hover:underline"
+                >
+                  <Linkedin className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  LinkedIn
+                </a>
+              )}
             </div>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Projects = () => {
+  const [filter, setFilter] = useState('all');
+
+  const visibleGroups = filter === 'all' ? groups : groups.filter((group) => group.exp.id === filter);
+
+  return (
+    <section id="projects" className="py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="text-center">
+          <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-[-0.02em] text-foreground">
+            Réalisations
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
+            Les travaux que j'ai menés, regroupés par mission — de la migration d'une
+            plateforme ITSM multi-pays au développement d'outils métier.
+          </p>
+          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+        </div>
+
+        {/* Filtre par mission */}
+        <div className="mt-10 flex flex-wrap justify-center gap-2">
+          <Button
+            type="button"
+            variant={filter === 'all' ? 'default' : 'outline'}
+            onClick={() => setFilter('all')}
+            className="rounded-full"
+          >
+            Toutes <span className="opacity-70">({studentData.projects.length})</span>
+          </Button>
+
+          {groups.map(({ exp, projects }) => (
+            <Button
+              key={exp.id}
+              type="button"
+              variant={filter === exp.id ? 'default' : 'outline'}
+              onClick={() => setFilter(exp.id)}
+              className="rounded-full"
+            >
+              {exp.shortName || exp.company} <span className="opacity-70">({projects.length})</span>
+            </Button>
+          ))}
+        </div>
+
+        {/* Groupes de réalisations */}
+        <div className="mt-14 space-y-16">
+          {visibleGroups.map(({ exp, projects }) => (
+            <div key={exp.id}>
+              <GroupHeader exp={exp} count={projects.length} />
+
+              {exp.stats?.length > 0 && (
+                <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                  {exp.stats
+                    .filter((item) => item.label)
+                    .map((item) => (
+                      <div key={item.label} className="rounded-2xl border border-border bg-card p-5 text-center">
+                        <div className="font-mono text-2xl font-semibold text-highlight">{item.value}</div>
+                        <div className="mt-1 text-xs leading-snug text-muted-foreground">{item.label}</div>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              <div className="grid gap-6 md:grid-cols-2">
+                {projects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+
+              <GroupReferences groupId={exp.id} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -35,7 +35,7 @@ const ProjectGallery = ({ project, open, onOpenChange }) => {
                   <img
                     src={src}
                     alt={`${project.title} — capture ${index + 1}`}
-                    className="w-full max-h-[70vh] object-contain rounded-lg bg-gray-100"
+                    className="w-full max-h-[70vh] object-contain rounded-lg bg-muted"
                   />
                 </CarouselItem>
               ))}

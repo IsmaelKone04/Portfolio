@@ -1,139 +1,107 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent } from './ui/card';
-import { Badge } from './ui/badge';
+import React from 'react';
+import { ShieldCheck, Code2, BrainCircuit, Mail, Github } from 'lucide-react';
 import { studentData } from '../data/mockData';
 
+const WHAT_I_DO_ICONS = {
+  itsm: ShieldCheck,
+  dev: Code2,
+  ai: BrainCircuit,
+};
+
 const About = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="about" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
-      {/* Formes géométriques décoratives */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-purple-100 to-pink-100 rounded-full translate-y-1/2 -translate-x-1/2 opacity-50"></div>
+    <section id="about" className="py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <h2 className="text-center text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-[-0.02em] text-foreground">
+          Qui suis-je ?
+        </h2>
+        <div className="mx-auto mt-3 h-0.5 w-10 bg-primary" aria-hidden="true" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-          
-          {/* Titre de section */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              À propos de moi
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full"></div>
+        <div className="mt-12 grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          {/* Ce que je fais */}
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+            {studentData.whatIDo.map(({ icon, title, description }) => {
+              const Icon = WHAT_I_DO_ICONS[icon] ?? ShieldCheck;
+              return (
+                <div key={title} className="rounded-2xl border border-border bg-card p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent">
+                    <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-4 text-sm font-semibold text-foreground">{title}</h3>
+                  <p className="mt-1.5 text-sm leading-[1.65] text-muted-foreground">{description}</p>
+                </div>
+              );
+            })}
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
-            {/* Partie gauche - Image et stats */}
-            <div className="space-y-8">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl transform rotate-3 opacity-20"></div>
-                <img 
-                  src={studentData.personal.avatar}
-                  alt={studentData.personal.name}
-                  className="relative w-full max-w-md mx-auto rounded-2xl shadow-2xl transform transition-all duration-500 hover:scale-105"
-                />
-              </div>
+          {/* Bio, langues, intérêts, contact */}
+          <div className="space-y-8">
+            <div className="space-y-4 text-base leading-[1.65] text-muted-foreground">
+              <p>
+                Étudiant en 3<sup>e</sup> année de Licence en Génie Logiciel à l'Université de
+                Technologie d'Abidjan, j'ai un double profil : développeur (PHP, Python,
+                TypeScript, Java) et administrateur ITSM / DevOps (GLPI, Docker, Keycloak).
+              </p>
+              <p>
+                À la DSI de YeshiGroup, j'ai dépassé le périmètre d'un stage de support :
+                migration de la plateforme GLPI 10 vers 11 d'un groupe présent dans 14 pays sur
+                une architecture Docker Compose, développement de 4 plugins PHP,
+                authentification unique Microsoft via Keycloak (validée en laboratoire) et remise
+                en service d'un helpdesk de production après une cyberattaque.
+              </p>
+              <p>
+                Ma méthode : tester plutôt que supposer, privilégier les mécanismes natifs et les
+                développements réversibles, avancer par étapes validées. J'utilise aussi l'IA
+                appliquée comme partenaire de travail (programme AiCE, MTN × ALX Africa) pour
+                cadrer, prototyper et analyser, en gardant toujours la validation finale.
+              </p>
+            </div>
 
-              {/* Stats cards */}
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-lg transform transition-all duration-300 hover:scale-105">
-                  <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">
-                      {studentData.projects.length}
-                    </div>
-                    <div className="text-gray-600 font-medium">Chantiers menés</div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg transform transition-all duration-300 hover:scale-105">
-                  <CardContent className="p-6 text-center">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">
-                      {Object.values(studentData.skills).flat().length}
-                    </div>
-                    <div className="text-gray-600 font-medium">Compétences</div>
-                  </CardContent>
-                </Card>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Langues</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {studentData.languages.map((lang) => (
+                  <span
+                    key={lang.name}
+                    className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
+                  >
+                    {lang.name} — {lang.level}
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Partie droite - Contenu */}
-            <div className="space-y-8">
-              
-              {/* Bio */}
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Mon parcours</h3>
-                <p className="text-lg text-gray-600 leading-relaxed mb-6">
-                  {studentData.personal.bio}
-                </p>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Centres d'intérêt</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {studentData.interests.map((interest) => (
+                  <span
+                    key={interest}
+                    className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
+                  >
+                    {interest}
+                  </span>
+                ))}
               </div>
+            </div>
 
-              {/* Langues */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Langues</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {studentData.languages.map((lang, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <span className="font-medium text-gray-800">{lang.name}</span>
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                        {lang.level}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Centres d'intérêt */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Centres d'intérêt</h3>
-                <div className="flex flex-wrap gap-2">
-                  {studentData.interests.map((interest, index) => (
-                    <Badge 
-                      key={index} 
-                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-3 py-2 text-sm font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      {interest}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Contact rapide */}
-              <div className="flex gap-4">
-                <a 
-                  href={`mailto:${studentData.personal.email}`}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-center hover:shadow-lg transform transition-all duration-300 hover:scale-105"
-                >
-                  📧 Email
-                </a>
-                <a 
-                  href={studentData.personal.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium text-center hover:shadow-lg transform transition-all duration-300 hover:scale-105"
-                >
-                  💻 GitHub
-                </a>
-              </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={`mailto:${studentData.personal.email}`}
+                className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40"
+              >
+                <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                E-mail
+              </a>
+              <a
+                href={studentData.personal.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40"
+              >
+                <Github className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                GitHub
+              </a>
             </div>
           </div>
         </div>

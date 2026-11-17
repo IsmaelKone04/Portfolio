@@ -1,174 +1,115 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { MapPin, Calendar, Trophy, Check, FlaskConical, Boxes, ListChecks, Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { studentData } from '../data/mockData';
 
-const Experience = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+const METHOD_ICONS = [FlaskConical, Boxes, ListChecks];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0 }
-    );
+const ExperienceCard = ({ experience, isLast }) => (
+  <div className="relative">
+    {!isLast && (
+      <div className="absolute left-6 top-16 h-full w-px bg-border" aria-hidden="true" />
+    )}
+    <div className="absolute left-[21px] top-6 h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true" />
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const ExperienceCard = ({ experience, index, isLast }) => (
-    <div className="relative">
-      {/* Timeline line */}
-      {!isLast && (
-        <div className="absolute left-8 top-20 w-0.5 h-full bg-gradient-to-b from-blue-500 to-indigo-600 opacity-30"></div>
-      )}
-      
-      {/* Timeline dot */}
-      <div className="absolute left-6 top-8 w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full border-4 border-white shadow-lg z-10"></div>
-      
-      <Card className="ml-16 mb-8 bg-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group overflow-hidden">
-        {/* Header avec logo */}
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-4">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                {experience.logo}
-              </div>
-              <div>
-                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                  {experience.position}
-                </CardTitle>
-                <p className="text-lg font-semibold text-blue-600">{experience.company}</p>
-                <p className="text-sm text-gray-500 flex flex-wrap items-center gap-2">
-                  📍 {experience.location} • 📅 {experience.duration}
-                  {experience.current && (
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs px-2 py-0.5">
-                      En cours
-                    </Badge>
-                  )}
-                </p>
-              </div>
-            </div>
+    <Card className="ml-16 mb-8 border-border">
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-accent">
+            <Building2 className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
           </div>
-        </CardHeader>
+          <div>
+            <CardTitle className="text-lg font-semibold text-foreground">
+              {experience.position}
+            </CardTitle>
+            <p className="text-sm font-medium text-highlight">{experience.company}</p>
+            <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                {experience.location}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                {experience.duration}
+              </span>
+              {experience.current && (
+                <Badge className="bg-primary text-primary-foreground">En cours</Badge>
+              )}
+            </p>
+          </div>
+        </div>
+      </CardHeader>
 
-        <CardContent className="p-6">
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            {experience.description}
+      <CardContent>
+        <p className="leading-[1.65] text-muted-foreground">{experience.description}</p>
+
+        {experience.achievements?.length > 0 && (
+          <div className="mt-5 space-y-3">
+            <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Trophy className="h-4 w-4 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+              Principales réalisations
+            </h4>
+            <ul className="space-y-2">
+              {experience.achievements.map((achievement) => (
+                <li key={achievement} className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" strokeWidth={1.75} aria-hidden="true" />
+                  <span className="leading-[1.65]">{achievement}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  </div>
+);
+
+const Experience = () => {
+  return (
+    <section id="experience" className="py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="text-center">
+          <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-[-0.02em] text-foreground">
+            Parcours
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
+            Stages qui ont forgé mes compétences en administration système et en développement.
+          </p>
+          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+        </div>
+
+        <div className="mx-auto mt-12 max-w-3xl">
+          {studentData.experience.map((exp, index) => (
+            <ExperienceCard
+              key={exp.id}
+              experience={exp}
+              isLast={index === studentData.experience.length - 1}
+            />
+          ))}
+        </div>
+
+        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-border bg-card p-8">
+          <h3 className="text-center text-sm font-semibold text-foreground">
+            Ma méthode de travail
+          </h3>
+          <p className="mx-auto mt-2 max-w-md text-center text-sm text-muted-foreground">
+            Les principes que j'ai appliqués sur une plateforme en production.
           </p>
 
-          {/* Réalisations — masquées tant qu'elles ne sont pas renseignées */}
-          {experience.achievements?.length > 0 && (
-            <div className="space-y-3">
-              <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                🏆 Principales réalisations
-              </h4>
-              <ul className="space-y-2">
-                {experience.achievements.map((achievement, achIndex) => (
-                  <li key={achIndex} className="flex items-start gap-3 text-gray-600">
-                    <span className="text-green-500 mt-1 text-sm">✓</span>
-                    <span className="leading-relaxed">{achievement}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  return (
-    <section id="experience" ref={sectionRef} className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 relative overflow-hidden">
-      
-      {/* Background decorative elements */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-blue-200/30 rounded-full animate-pulse blur-xl"></div>
-      <div className="absolute bottom-20 right-20 w-48 h-48 bg-indigo-200/30 rounded-full animate-bounce blur-2xl"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-          
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Mon Expérience
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Parcours professionnel et stages qui ont forgé mes compétences en développement
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mt-6"></div>
-          </div>
-
-          {/* Timeline */}
-          <div className="max-w-4xl mx-auto">
-            {studentData.experience.map((exp, index) => (
-              <div
-                key={exp.id}
-                className={`transform transition-all duration-700 ${
-                  isVisible 
-                    ? 'translate-y-0 opacity-100' 
-                    : 'translate-y-20 opacity-0'
-                }`}
-                style={{ transitionDelay: `${index * 300}ms` }}
-              >
-                <ExperienceCard 
-                  experience={exp} 
-                  index={index}
-                  isLast={index === studentData.experience.length - 1}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Skills développées */}
-          <div className="mt-16 max-w-4xl mx-auto">
-            <Card className="bg-white border-0 shadow-xl">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">
-                  💡 Ma méthode de travail
-                </h3>
-                <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
-                  Les principes que j'ai appliqués sur une plateforme en production
-                </p>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  {studentData.method.map((principle, index) => (
-                    <div key={index} className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg">
-                        {principle.icon}
-                      </div>
-                      <h4 className="font-semibold text-gray-900 mb-2">{principle.title}</h4>
-                      <p className="text-gray-600 text-sm leading-relaxed">{principle.text}</p>
-                    </div>
-                  ))}
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
+            {studentData.method.map((principle, index) => {
+              const Icon = METHOD_ICONS[index] ?? FlaskConical;
+              return (
+                <div key={principle.title} className="text-center">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent">
+                    <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h4 className="mt-3 text-sm font-semibold text-foreground">{principle.title}</h4>
+                  <p className="mt-1.5 text-sm leading-[1.65] text-muted-foreground">{principle.text}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Call to action */}
-          <div className="mt-12 text-center">
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">
-                Prêt pour de nouveaux défis 💪
-              </h3>
-              <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-                Assumer des responsabilités au-delà de mon périmètre initial m'a appris à
-                diagnostiquer en profondeur et à livrer des solutions durables. Je cherche à
-                poursuivre sur cette double compétence système et développement.
-              </p>
-              <Badge className="bg-white text-blue-600 px-6 py-2 text-lg font-semibold">
-                🎓 Étudiant • 💼 Ouvert aux opportunités
-              </Badge>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -1,226 +1,89 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent } from './ui/card';
-import { Progress } from './ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import React from 'react';
+import { Code2, Layers, Server, Wrench, BrainCircuit } from 'lucide-react';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui/accordion';
 import { studentData } from '../data/mockData';
 
-const Skills = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [animatedSkills, setAnimatedSkills] = useState({});
-  const sectionRef = useRef(null);
+const GROUPS = [
+  { key: 'languages', title: 'Langages', icon: Code2 },
+  { key: 'frameworks', title: 'Frameworks', icon: Layers },
+  { key: 'systems', title: 'Infra & ITSM', icon: Server },
+  { key: 'tools', title: 'Outils & méthodes', icon: Wrench },
+  { key: 'ai', title: 'IA appliquée', icon: BrainCircuit },
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          // Animer les barres de progression avec délai
-          setTimeout(() => {
-            const newAnimatedSkills = {};
-            ['languages', 'frameworks', 'systems', 'tools'].forEach(category => {
-              studentData.skills[category].forEach((skill, index) => {
-                setTimeout(() => {
-                  setAnimatedSkills(prev => ({
-                    ...prev,
-                    [`${category}-${index}`]: skill.level
-                  }));
-                }, index * 200);
-              });
-            });
-          }, 500);
-        }
-      },
-      { threshold: 0 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Une seule compétence ouverte à la fois, identifiée par « catégorie-index ».
-  const [openSkill, setOpenSkill] = useState(null);
-
-  const SkillCategory = ({ title, skills, category }) => (
-    <div className="space-y-6">
-      <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-        <span className="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"></span>
-        {title}
-      </h3>
-
-      <p className="text-sm text-gray-500 -mt-4 mb-2">
-        Cliquez sur une compétence pour voir ce que je sais concrètement en faire.
-      </p>
-
-      <div className="grid gap-4">
-        {skills.map((skill, index) => {
-          const key = `${category}-${index}`;
-          const hasDetails = skill.details?.length > 0;
-          const isOpen = openSkill === key;
-
-          return (
-            <Card
-              key={index}
-              className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              <CardContent className="p-0">
-                {/* En-tête cliquable : dépliable au clic comme au clavier */}
-                <button
-                  type="button"
-                  onClick={() => hasDetails && setOpenSkill(isOpen ? null : key)}
-                  aria-expanded={hasDetails ? isOpen : undefined}
-                  aria-controls={hasDetails ? `detail-${key}` : undefined}
-                  disabled={!hasDetails}
-                  className={`w-full text-left p-6 rounded-xl transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${
-                    hasDetails ? 'cursor-pointer hover:bg-blue-50/60' : 'cursor-default'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="text-2xl shrink-0">{skill.icon}</span>
-                      <span className="font-semibold text-gray-800 text-lg">{skill.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                        {skill.level}%
-                      </span>
-                      {hasDetails && (
-                        <span
-                          aria-hidden="true"
-                          className={`text-blue-600 text-sm transition-transform duration-300 ${
-                            isOpen ? 'rotate-180' : ''
-                          }`}
-                        >
-                          ▾
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="relative">
-                    <Progress
-                      value={animatedSkills[key] || 0}
-                      className="h-3 bg-gray-200"
-                    />
-                    <div
-                      className="absolute top-0 left-0 h-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full transition-all duration-1000 ease-out"
-                      style={{ width: `${animatedSkills[key] || 0}%` }}
-                    ></div>
-                  </div>
-                </button>
-
-                {/* Détail : ce que je sais faire avec cette compétence */}
-                {hasDetails && isOpen && (
-                  <div
-                    id={`detail-${key}`}
-                    className="px-6 pb-6 pt-1 border-t border-blue-100 bg-blue-50/40 rounded-b-xl"
-                  >
-                    <p className="text-sm font-semibold text-blue-800 mt-4 mb-3">
-                      Ce que je sais faire
-                    </p>
-                    <ul className="space-y-2">
-                      {skill.details.map((detail, detailIndex) => (
-                        <li key={detailIndex} className="flex gap-3 text-gray-700 leading-relaxed">
-                          <span className="text-blue-500 mt-1 shrink-0" aria-hidden="true">▸</span>
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
+const SkillGroup = ({ title, icon: Icon, skills }) => {
+  const withDetails = skills.filter((skill) => skill.details?.length > 0);
 
   return (
-    <section id="skills" ref={sectionRef} className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 relative overflow-hidden">
-      
-      {/* Formes géométriques décoratives */}
-      <div className="absolute top-20 right-20 w-32 h-32 bg-blue-200/30 rounded-full animate-pulse blur-xl"></div>
-      <div className="absolute bottom-20 left-20 w-48 h-48 bg-indigo-200/30 rounded-full animate-bounce blur-2xl"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-          
-          {/* Titre de section */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Mes Compétences
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Compétences acquises en formation et consolidées en production, entre
-              exploitation système et développement
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mt-6"></div>
-          </div>
+    <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent">
+          <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+        </div>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+      </div>
 
-          {/* Tabs pour organiser les compétences */}
-          <Tabs defaultValue="languages" className="w-full">
-            <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-2 sm:grid-cols-4 gap-1 h-auto mb-12 bg-white shadow-lg rounded-xl p-1">
-              <TabsTrigger
-                value="languages"
-                className="rounded-lg py-3 px-6 font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white transition-all duration-300"
-              >
-                💻 Langages
-              </TabsTrigger>
-              <TabsTrigger
-                value="frameworks"
-                className="rounded-lg py-3 px-6 font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white transition-all duration-300"
-              >
-                🧱 Frameworks
-              </TabsTrigger>
-              <TabsTrigger
-                value="systems"
-                className="rounded-lg py-3 px-6 font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white transition-all duration-300"
-              >
-                🐳 Systèmes
-              </TabsTrigger>
-              <TabsTrigger 
-                value="tools"
-                className="rounded-lg py-3 px-6 font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white transition-all duration-300"
-              >
-                🔧 Outils
-              </TabsTrigger>
-            </TabsList>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <span
+            key={skill.name}
+            className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
+          >
+            {skill.name}
+          </span>
+        ))}
+      </div>
 
-            <TabsContent value="languages" className="space-y-6">
-              <SkillCategory
-                title="Langages & développement"
-                skills={studentData.skills.languages}
-                category="languages"
-              />
-            </TabsContent>
+      {withDetails.length > 0 && (
+        <Accordion type="single" collapsible className="mt-5 border-t border-border">
+          {withDetails.map((skill) => (
+            <AccordionItem key={skill.name} value={skill.name}>
+              <AccordionTrigger className="text-sm text-foreground">
+                {skill.name}
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-2">
+                  {skill.details.map((detail) => (
+                    <li key={detail} className="flex gap-2.5 text-sm leading-[1.65] text-muted-foreground">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-highlight" aria-hidden="true" />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
+    </div>
+  );
+};
 
-            <TabsContent value="frameworks" className="space-y-6">
-              <SkillCategory
-                title="Frameworks & bibliothèques"
-                skills={studentData.skills.frameworks}
-                category="frameworks"
-              />
-            </TabsContent>
+const Skills = () => {
+  return (
+    <section id="skills" className="py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="text-center">
+          <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-[-0.02em] text-foreground">
+            Compétences
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
+            Compétences acquises en formation et consolidées en production, entre exploitation
+            système et développement. Cliquez sur une compétence pour voir ce que je sais
+            concrètement en faire.
+          </p>
+          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+        </div>
 
-            <TabsContent value="systems" className="space-y-6">
-              <SkillCategory
-                title="Systèmes, infrastructure & sécurité"
-                skills={studentData.skills.systems}
-                category="systems"
-              />
-            </TabsContent>
-
-            <TabsContent value="tools" className="space-y-6">
-              <SkillCategory
-                title="Outils & méthodes"
-                skills={studentData.skills.tools}
-                category="tools"
-              />
-            </TabsContent>
-          </Tabs>
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {GROUPS.map((group) => (
+            <SkillGroup
+              key={group.key}
+              title={group.title}
+              icon={group.icon}
+              skills={studentData.skills[group.key]}
+            />
+          ))}
         </div>
       </div>
     </section>
