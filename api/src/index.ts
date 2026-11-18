@@ -5,7 +5,7 @@ import { eq, asc } from "drizzle-orm";
 import * as schema from "./db/schema";
 import { admin } from "./admin";
 
-type Bindings = { DB: D1Database; ADMIN_DEV_SECRET?: string };
+type Bindings = { DB: D1Database; ADMIN_DEV_SECRET?: string; CERTIFICATIONS: R2Bucket };
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -135,6 +135,26 @@ app.get("/api/sections", async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const rows = await db.select().from(schema.sections).orderBy(asc(schema.sections.sortOrder));
   return c.json(rows);
+});
+
+app.get("/api/certifications", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const rows = await db.select().from(schema.certifications).orderBy(asc(schema.certifications.sortOrder));
+  return c.json(rows);
+});
+
+// Sert le justificatif (PDF/image) stocké dans R2 — fileUrl n'est qu'une clé
+// d'objet interne, jamais une URL publique directe.
+app.get("/api/certifications/:id/file", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = Number(c.req.param("id"));
+  const [cert] = await db.select().from(schema.certifications).where(eq(schema.certifications.id, id));
+  if (!cert?.fileUrl) return c.json({ error: "not_found" }, 404);
+  const obj = await c.env.CERTIFICATIONS.get(cert.fileUrl);
+  if (!obj) return c.json({ error: "not_found" }, 404);
+  c.header("Content-Type", obj.httpMetadata?.contentType ?? "application/octet-stream");
+  c.header("Content-Disposition", `inline; filename="${cert.fileName ?? "justificatif"}"`);
+  return c.body(obj.body as ReadableStream);
 });
 
 app.get("/api/references", async (c) => {

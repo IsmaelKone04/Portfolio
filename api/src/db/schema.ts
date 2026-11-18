@@ -186,6 +186,22 @@ export const sections = sqliteTable("sections", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
+// Diplômes, concours et formations affichés sur la page Certifications.
+// Le justificatif (PDF ou image) est stocké dans le bucket R2 "CERTIFICATIONS" ;
+// fileUrl est la clé de l'objet dans ce bucket, pas une URL publique directe
+// (servie par /api/certifications/:id/file, voir index.ts).
+export const certifications = sqliteTable("certifications", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  type: text("type", { enum: ["diplome", "formation", "concours"] }).notNull(),
+  organization: text("organization"),
+  date: text("date"),
+  description: text("description"),
+  fileUrl: text("file_url"),
+  fileName: text("file_name"),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
 // Messages reçus via le formulaire de contact du front (POST /api/contact).
 export const contactMessages = sqliteTable("contact_messages", {
   id: integer("id").primaryKey({ autoIncrement: true }),

@@ -4,7 +4,7 @@ import { eq, desc, asc } from "drizzle-orm";
 import * as schema from "./db/schema";
 import { adminAuth } from "./middleware/adminAuth";
 
-type Bindings = { DB: D1Database; ADMIN_DEV_SECRET?: string };
+type Bindings = { DB: D1Database; ADMIN_DEV_SECRET?: string; CERTIFICATIONS: R2Bucket };
 
 export const admin = new Hono<{ Bindings: Bindings }>();
 admin.use("*", adminAuth);
@@ -409,6 +409,78 @@ admin.delete("/references/:id", async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const result = await db.delete(schema.references).where(eq(schema.references.id, Number(c.req.param("id"))));
   if (!result.meta.changes) return c.json({ error: "not_found" }, 404);
+  return c.json({ ok: true });
+});
+
+// --- Certifications (diplômes, concours, formations) -----------------------
+
+admin.post("/certifications", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const body = await c.req.json<Record<string, any>>();
+  const missing = missingFields(body, ["title", "type"]);
+  if (missing.length) return c.json({ error: "missing_fields", fields: missing }, 400);
+
+  const [inserted] = await db.insert(schema.certifications).values({
+    title: body.title, type: body.type, organization: body.organization ?? null,
+    date: body.date ?? null, description: body.description ?? null, sortOrder: body.sortOrder ?? 0,
+  }).returning({ id: schema.certifications.id });
+  return c.json({ ok: true, id: inserted.id }, 201);
+});
+
+admin.put("/certifications/:id", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = Number(c.req.param("id"));
+  const body = await c.req.json<Record<string, any>>();
+  const [existing] = await db.select().from(schema.certifications).where(eq(schema.certifications.id, id));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+
+  await db.update(schema.certifications).set({
+    title: body.title ?? existing.title, type: body.type ?? existing.type,
+    organization: body.organization ?? existing.organization, date: body.date ?? existing.date,
+    description: body.description ?? existing.description, sortOrder: body.sortOrder ?? existing.sortOrder,
+  }).where(eq(schema.certifications.id, id));
+  return c.json({ ok: true });
+});
+
+admin.delete("/certifications/:id", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = Number(c.req.param("id"));
+  const [existing] = await db.select().from(schema.certifications).where(eq(schema.certifications.id, id));
+  if (existing?.fileUrl) await c.env.CERTIFICATIONS.delete(existing.fileUrl).catch(() => {});
+  const result = await db.delete(schema.certifications).where(eq(schema.certifications.id, id));
+  if (!result.meta.changes) return c.json({ error: "not_found" }, 404);
+  return c.json({ ok: true });
+});
+
+const ALLOWED_CERT_FILE_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp"];
+const MAX_CERT_FILE_SIZE = 10 * 1024 * 1024;
+
+admin.put("/certifications/:id/file", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = Number(c.req.param("id"));
+  const [existing] = await db.select().from(schema.certifications).where(eq(schema.certifications.id, id));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+
+  const form = await c.req.formData().catch(() => null);
+  const file = form?.get("file");
+  if (!(file instanceof File)) return c.json({ error: "missing_file" }, 400);
+  if (file.size > MAX_CERT_FILE_SIZE) return c.json({ error: "file_too_large" }, 400);
+  if (!ALLOWED_CERT_FILE_TYPES.includes(file.type)) return c.json({ error: "unsupported_type" }, 400);
+
+  const key = `certifications/${id}-${Date.now()}-${file.name}`;
+  await c.env.CERTIFICATIONS.put(key, await file.arrayBuffer(), { httpMetadata: { contentType: file.type } });
+  if (existing.fileUrl) await c.env.CERTIFICATIONS.delete(existing.fileUrl).catch(() => {});
+  await db.update(schema.certifications).set({ fileUrl: key, fileName: file.name }).where(eq(schema.certifications.id, id));
+  return c.json({ ok: true, fileName: file.name });
+});
+
+admin.delete("/certifications/:id/file", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = Number(c.req.param("id"));
+  const [existing] = await db.select().from(schema.certifications).where(eq(schema.certifications.id, id));
+  if (!existing) return c.json({ error: "not_found" }, 404);
+  if (existing.fileUrl) await c.env.CERTIFICATIONS.delete(existing.fileUrl).catch(() => {});
+  await db.update(schema.certifications).set({ fileUrl: null, fileName: null }).where(eq(schema.certifications.id, id));
   return c.json({ ok: true });
 });
 

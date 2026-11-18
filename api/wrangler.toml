@@ -13,6 +13,13 @@ migrations_dir = "drizzle"
 [vars]
 ENVIRONMENT = "production"
 
+# Justificatifs de certifications (PDF/image). En local, wrangler émule ce bucket
+# automatiquement. En prod : wrangler r2 bucket create portfolio-certifications
+# (une fois, avec le compte Cloudflare d'Ismaël).
+[[r2_buckets]]
+binding = "CERTIFICATIONS"
+bucket_name = "portfolio-certifications"
+
 # Routes publiques en lecture (/api/*) servies par ce Worker.
 # /admin/* reste protégé par une règle Cloudflare Access configurée
 # dans le dashboard Cloudflare Zero Trust, pas dans ce fichier.
