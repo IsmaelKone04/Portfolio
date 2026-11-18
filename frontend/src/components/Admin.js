@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Trash2, Loader2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Loader2 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useToast } from '../hooks/use-toast';
+import { adminGet } from '../lib/adminApi';
+import SectionsTab from './admin/SectionsTab';
+import ProfileTab from './admin/ProfileTab';
+import ExperienceTab from './admin/ExperienceTab';
+import ProjectsTab from './admin/ProjectsTab';
+import EducationTab from './admin/EducationTab';
+import MessagesTab from './admin/MessagesTab';
+import AnalyticsTab from './admin/AnalyticsTab';
 
-// Page d'administration minimale : lecture des messages de contact et des
-// statistiques de visite. Protégée côté Worker par Cloudflare Access en
-// production (en-tête Cf-Access-Authenticated-User-Email) ; en local, par le
-// jeton ADMIN_DEV_SECRET saisi ci-dessous (voir api/.dev.vars, non versionné).
+// Page d'administration : CRUD complet sur le contenu du site (profil,
+// expériences, réalisations, formation), visibilité des sections, messages
+// de contact et statistiques de visite. Protégée côté Worker par Cloudflare
+// Access en production (en-tête Cf-Access-Authenticated-User-Email) ; en
+// local, par le jeton ADMIN_DEV_SECRET saisi ci-dessous (voir api/.dev.vars,
+// non versionné).
 const API_URL = process.env.REACT_APP_API_URL;
 const TOKEN_KEY = 'portfolio_admin_token';
 
@@ -20,31 +30,22 @@ const Admin = () => {
       return '';
     }
   });
-  const [messages, setMessages] = useState(null);
-  const [analytics, setAnalytics] = useState(null);
+  const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const load = async (currentToken) => {
+  const tryAuth = async (currentToken) => {
     setLoading(true);
     try {
-      const headers = { Authorization: `Bearer ${currentToken}` };
-      const [contactRes, analyticsRes] = await Promise.all([
-        fetch(`${API_URL}/api/admin/contact`, { headers }),
-        fetch(`${API_URL}/api/admin/analytics`, { headers }),
-      ]);
-      if (!contactRes.ok || !analyticsRes.ok) throw new Error('unauthorized');
-
-      setMessages(await contactRes.json());
-      setAnalytics(await analyticsRes.json());
+      await adminGet(currentToken, '/api/admin/analytics');
+      setAuthorized(true);
       try {
         sessionStorage.setItem(TOKEN_KEY, currentToken);
       } catch {
         // sessionStorage indisponible (navigation privée...) : on continue sans persister.
       }
     } catch {
-      setMessages(null);
-      setAnalytics(null);
+      setAuthorized(false);
       toast({
         variant: 'destructive',
         title: 'Accès refusé',
@@ -56,25 +57,12 @@ const Admin = () => {
   };
 
   useEffect(() => {
-    if (token) load(token);
+    if (token) tryAuth(token);
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    load(token);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/api/admin/contact/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error('delete_failed');
-      setMessages((prev) => prev.filter((m) => m.id !== id));
-    } catch {
-      toast({ variant: 'destructive', title: 'Suppression impossible' });
-    }
+    tryAuth(token);
   };
 
   if (!API_URL) {
@@ -102,72 +90,26 @@ const Admin = () => {
         </Button>
       </form>
 
-      {analytics && (
-        <section className="mt-10">
-          <h2 className="text-sm font-semibold text-foreground">Statistiques de visite</h2>
-          <div className="mt-3 grid grid-cols-2 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-2xl font-semibold text-foreground">{analytics.totalViews}</p>
-                <p className="text-xs text-muted-foreground">Vues totales</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-2xl font-semibold text-foreground">{analytics.uniqueVisitors}</p>
-                <p className="text-xs text-muted-foreground">Visiteurs uniques</p>
-              </CardContent>
-            </Card>
-          </div>
-          <Card className="mt-4">
-            <CardHeader>
-              <CardTitle className="text-sm">Pages vues</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-1">
-              {Object.entries(analytics.byPath).map(([path, count]) => (
-                <div key={path} className="flex justify-between border-b border-border py-1 text-sm last:border-0">
-                  <span className="text-foreground">{path}</span>
-                  <span className="text-muted-foreground">{count}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </section>
-      )}
+      {authorized && (
+        <Tabs defaultValue="sections" className="mt-10">
+          <TabsList className="flex h-auto flex-wrap justify-start gap-1">
+            <TabsTrigger value="sections">Sections</TabsTrigger>
+            <TabsTrigger value="profile">Profil</TabsTrigger>
+            <TabsTrigger value="experience">Expériences</TabsTrigger>
+            <TabsTrigger value="projects">Réalisations</TabsTrigger>
+            <TabsTrigger value="education">Formation</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
+            <TabsTrigger value="analytics">Statistiques</TabsTrigger>
+          </TabsList>
 
-      {messages && (
-        <section className="mt-10">
-          <h2 className="text-sm font-semibold text-foreground">Messages reçus ({messages.length})</h2>
-          <div className="mt-3 space-y-3">
-            {messages.length === 0 && (
-              <p className="text-sm text-muted-foreground">Aucun message pour le moment.</p>
-            )}
-            {messages.map((m) => (
-              <Card key={m.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{m.subject}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {m.name} — {m.email} —{' '}
-                        {new Date(m.createdAt).toLocaleString('fr-FR')}
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(m.id)}
-                      aria-label="Supprimer ce message"
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
-                    </Button>
-                  </div>
-                  <p className="mt-3 whitespace-pre-wrap text-sm text-foreground">{m.message}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+          <TabsContent value="sections"><SectionsTab token={token} /></TabsContent>
+          <TabsContent value="profile"><ProfileTab token={token} /></TabsContent>
+          <TabsContent value="experience"><ExperienceTab token={token} /></TabsContent>
+          <TabsContent value="projects"><ProjectsTab token={token} /></TabsContent>
+          <TabsContent value="education"><EducationTab token={token} /></TabsContent>
+          <TabsContent value="messages"><MessagesTab token={token} /></TabsContent>
+          <TabsContent value="analytics"><AnalyticsTab token={token} /></TabsContent>
+        </Tabs>
       )}
     </div>
   );
