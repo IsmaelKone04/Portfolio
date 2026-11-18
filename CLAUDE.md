@@ -51,8 +51,9 @@ frontend/
       HomePage.js (Hero seul)  ParcoursPage.js  RealisationsPage.js
       CompetencesPage.js  CertificationsPage.js  ContactPage.js
     components/
-      Header.js (nav par route)  Hero.js  Parcours.js  About.js  Skills.js
-      Projects.js  MethodBlock.js  Certifications.js  Contact.js  Admin.js  ui/ (shadcn/ui)
+      Header.js (nav par route)  Hero.js  Parcours.js  Skills.js  Projects.js
+      MethodBlock.js  Certifications.js  Contact.js  ContactIntro.js  Admin.js
+      ui/ (shadcn/ui)
       admin/ (un onglet par domaine : Sections, Profil, Expériences, Réalisations,
         Certifications, Messages, Statistiques)
     contexts/ContentContext.js  # fetch API + repli mockData.js, visibilité des pages

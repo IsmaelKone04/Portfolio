@@ -1,7 +1,6 @@
 // Récupère le contenu du site depuis l'API Cloudflare (pilotable depuis /admin).
 // Si l'API est inatteignable (déploiement pas encore fait, ou site en prod avant
 // que le Worker ne soit déployé), on retombe sur mockData.js : voir ContentContext.
-import { studentData } from '../data/mockData';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const SKILL_GROUP_KEYS = ['languages', 'frameworks', 'systems', 'tools', 'ai'];
@@ -37,7 +36,6 @@ export async function fetchContent() {
 
     return {
       personal: profile,
-      whatIDo: studentData.whatIDo,
       skills: skillsByGroup,
       projectGroups: groups.filter((g) => g.kind === 'group'),
       projects,

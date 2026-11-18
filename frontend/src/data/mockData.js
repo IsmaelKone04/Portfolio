@@ -27,29 +27,6 @@ export const studentData = {
     }
   },
 
-  // Cartes "Ce que je fais" affichées en tête de la section Qui suis-je (About.js).
-  // `icon` renvoie à une clé mappée vers un composant lucide-react dans le composant.
-  whatIDo: [
-    {
-      icon: "itsm",
-      title: "Administration ITSM et DevOps",
-      description:
-        "Déploiement, migration et exploitation de GLPI sur Docker Compose, authentification unique et plugins sur mesure."
-    },
-    {
-      icon: "dev",
-      title: "Développement logiciel",
-      description:
-        "Applications complètes en PHP, Python, TypeScript et Java, du back-end à l'interface web et mobile."
-    },
-    {
-      icon: "ai",
-      title: "IA appliquée",
-      description:
-        "Prompting structuré, analyse de données et création de contenu, avec une validation humaine systématique."
-    }
-  ],
-
   // Niveaux calibrés sur les dépôts réellement livrés (voir `projects`), pas sur des
   // intentions : un langage n'est haut que s'il porte au moins un projet mis en production
   // ou livré à un tiers.
