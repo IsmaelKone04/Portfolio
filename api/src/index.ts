@@ -144,17 +144,22 @@ app.get("/api/references", async (c) => {
 // --- Contact (écriture publique, lecture réservée à /admin) ------------
 
 app.post("/api/contact", async (c) => {
-  const body = await c.req.json<{ name?: string; email?: string; subject?: string; message?: string }>();
-  const name = body.name?.trim();
-  const email = body.email?.trim();
-  const subject = body.subject?.trim();
-  const message = body.message?.trim();
+  const body = await c.req
+    .json<{ name?: string; email?: string; subject?: string; message?: string }>()
+    .catch(() => null);
+  const name = body?.name?.trim();
+  const email = body?.email?.trim();
+  const subject = body?.subject?.trim();
+  const message = body?.message?.trim();
 
   if (!name || !email || !subject || !message) {
     return c.json({ error: "missing_fields" }, 400);
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return c.json({ error: "invalid_email" }, 400);
+  }
+  if (name.length > 200 || email.length > 200 || subject.length > 300 || message.length > 5000) {
+    return c.json({ error: "field_too_long" }, 400);
   }
 
   const db = drizzle(c.env.DB, { schema });
@@ -171,12 +176,19 @@ app.post("/api/contact", async (c) => {
 // --- Analytics (beacon public, lecture réservée à /admin) --------------
 
 app.post("/api/analytics/beacon", async (c) => {
+  const body = await c.req.json<{ path?: string; referrer?: string; sessionHash?: string }>().catch(() => null);
+  const path = body?.path?.trim();
+  if (!path || path.length > 500) {
+    return c.json({ error: "invalid_path" }, 400);
+  }
+  const referrer = body?.referrer?.trim().slice(0, 500) || null;
+  const sessionHash = body?.sessionHash?.trim().slice(0, 100) || null;
+
   const db = drizzle(c.env.DB, { schema });
-  const body = await c.req.json<{ path: string; referrer?: string; sessionHash?: string }>();
   await db.insert(schema.pageViews).values({
-    path: body.path,
-    referrer: body.referrer ?? null,
-    sessionHash: body.sessionHash ?? null,
+    path: path.slice(0, 500),
+    referrer,
+    sessionHash,
     createdAt: new Date().toISOString(),
   });
   return c.json({ ok: true });
