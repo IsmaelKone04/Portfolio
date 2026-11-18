@@ -14,7 +14,7 @@ async function getJSON(path) {
 export async function fetchContent() {
   if (!API_URL) return null;
   try {
-    const [profile, groups, projects, skills, certifications, method, interests, languages, referencesData] =
+    const [profile, groups, projects, skills, certifications, method, interests, languages, referencesData, uiSettings] =
       await Promise.all([
         getJSON('/api/profile'),
         getJSON('/api/groups'),
@@ -25,6 +25,7 @@ export async function fetchContent() {
         getJSON('/api/interests'),
         getJSON('/api/languages'),
         getJSON('/api/references'),
+        getJSON('/api/settings'),
       ]);
 
     const skillsByGroup = {};
@@ -46,6 +47,7 @@ export async function fetchContent() {
       languages,
       references: referencesData?.references ?? [],
       referencesFallback: referencesData?.fallback ?? null,
+      uiSettings,
     };
   } catch {
     return null;

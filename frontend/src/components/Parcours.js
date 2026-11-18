@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Building2, MapPin, Calendar, Trophy, Check, ChevronDown } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Reveal } from './ui/motion-card';
@@ -21,35 +21,34 @@ const ExperienceCard = ({ exp, isLast }) => {
       {!isLast && <div className="absolute left-6 top-16 h-full w-px bg-border" aria-hidden="true" />}
       <div className="absolute left-[21px] top-6 h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true" />
 
-      <Card className="ml-16 mb-8 border-border">
-        <CardHeader className="pb-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
-              <Building2 className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
-            </div>
-            <div>
-              <CardTitle className="text-lg font-semibold text-foreground">{exp.position}</CardTitle>
-              <p className="text-sm font-medium text-highlight">{exp.shortName || exp.company}</p>
-              <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                {exp.location && (
-                  <span className="inline-flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                    {exp.location}
-                  </span>
-                )}
-                {exp.duration && (
-                  <span className="inline-flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                    {exp.duration}
-                  </span>
-                )}
-                {exp.current && <Badge className="bg-primary text-primary-foreground">En cours</Badge>}
-              </p>
-            </div>
+      <Card className="ml-16 mb-8 overflow-hidden rounded-[28px] p-0 shadow-[0_14px_36px_-12px_rgba(29,78,216,0.22)]">
+        {/* Bandeau dégradé : poste + entreprise, pour un repère immédiat dans la chronologie. */}
+        <div className="flex items-center gap-4 bg-[linear-gradient(160deg,#1D4ED8_0%,#2563EB_100%)] px-6 py-5 text-white">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-white/15">
+            <Building2 className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
           </div>
-        </CardHeader>
+          <div>
+            <h3 className="text-lg font-semibold text-white">{exp.position}</h3>
+            <p className="text-sm font-medium text-white/80">{exp.shortName || exp.company}</p>
+            <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/75">
+              {exp.location && (
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  {exp.location}
+                </span>
+              )}
+              {exp.duration && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  {exp.duration}
+                </span>
+              )}
+              {exp.current && <Badge className="border-transparent bg-white/20 text-white hover:bg-white/20">En cours</Badge>}
+            </p>
+          </div>
+        </div>
 
-        <CardContent>
+        <CardContent className="pt-6">
           {exp.description && <p className="leading-[1.65] text-muted-foreground">{exp.description}</p>}
 
           {achievements.length > 0 && (

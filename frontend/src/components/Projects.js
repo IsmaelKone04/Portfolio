@@ -47,7 +47,7 @@ const ProjectCard = ({ project, index, total }) => {
 
   return (
     <TiltCard className="h-full">
-      <Card className="flex h-full flex-col overflow-hidden rounded-[28px] border-border p-0 shadow-[0_10px_30px_-10px_rgba(29,78,216,0.15)]">
+      <Card className="flex h-full flex-col overflow-hidden rounded-[28px] p-0 shadow-[0_10px_30px_-10px_rgba(29,78,216,0.15)]">
         {/* Moitié haute : icône flottante, catégorie, titre, description courte. */}
         <div className="px-6 pt-6 pb-8">
           <div className="flex items-start justify-between gap-3">

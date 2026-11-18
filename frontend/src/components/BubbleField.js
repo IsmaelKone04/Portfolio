@@ -1,36 +1,61 @@
 import { useEffect, useRef } from 'react';
 
 // Décor interactif en arrière-plan du Hero : des bulles bleues translucides
-// qui dérivent doucement et éclatent en micro-particules au survol ou au clic,
-// avant de réapparaître ailleurs. Purement décoratif (aria-hidden), le canvas
-// se contente de couvrir les zones vides du Hero — le contenu (texte, liens)
-// reste au-dessus et garde ses propres interactions.
-const BUBBLE_COUNT = 14;
+// qui dérivent en permanence et éclatent en micro-particules au survol ou au
+// clic, avant de réapparaître ailleurs. Purement décoratif (aria-hidden), le
+// canvas se contente de couvrir les zones vides du Hero — le contenu (texte,
+// liens) reste au-dessus et garde ses propres interactions.
+// Le mouvement est piloté uniquement par `enabled` (réglage /admin > Sections,
+// `uiSettings.bubblesEnabled`) plutôt que par la préférence système de
+// réduction des animations, pour rester sous contrôle explicite d'Ismaël.
+const BUBBLE_COUNT = 16;
 const BUBBLE_RGB = '37, 99, 235';
 const PARTICLE_RGBS = ['56, 189, 248', '255, 255, 255', '37, 99, 235'];
 
 function spawnBubble(width, height) {
-  const radius = 10 + Math.random() * 22;
+  const radius = 12 + Math.random() * 26;
   return {
     x: Math.random() * width,
     y: height + radius + Math.random() * height * 0.5,
     radius,
-    vx: (Math.random() - 0.5) * 0.25,
-    vy: -0.15 - Math.random() * 0.25,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: -0.2 - Math.random() * 0.35,
     opacity: 0,
-    targetOpacity: 0.14 + Math.random() * 0.18,
+    targetOpacity: 0.22 + Math.random() * 0.26,
     popped: false,
   };
 }
 
-const BubbleField = ({ className = '' }) => {
+function drawBubble(ctx, b) {
+  const gradient = ctx.createRadialGradient(
+    b.x - b.radius * 0.35,
+    b.y - b.radius * 0.35,
+    b.radius * 0.1,
+    b.x,
+    b.y,
+    b.radius
+  );
+  gradient.addColorStop(0, `rgba(255, 255, 255, ${Math.min(b.opacity + 0.35, 0.85)})`);
+  gradient.addColorStop(0.5, `rgba(${BUBBLE_RGB}, ${b.opacity})`);
+  gradient.addColorStop(1, `rgba(${BUBBLE_RGB}, ${b.opacity * 0.6})`);
+
+  ctx.beginPath();
+  ctx.fillStyle = gradient;
+  ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = `rgba(${BUBBLE_RGB}, ${Math.min(b.opacity + 0.2, 0.6)})`;
+  ctx.stroke();
+}
+
+const BubbleField = ({ className = '', enabled = true }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    if (!enabled) return undefined;
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
     const ctx = canvas.getContext('2d');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let width = canvas.offsetWidth;
     let height = canvas.offsetHeight;
@@ -52,18 +77,6 @@ const BubbleField = ({ className = '' }) => {
       b.opacity = b.targetOpacity;
       return b;
     });
-
-    if (reduceMotion) {
-      ctx.clearRect(0, 0, width, height);
-      bubbles.forEach((b) => {
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(${BUBBLE_RGB}, ${b.opacity})`;
-        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      return () => window.removeEventListener('resize', resize);
-    }
-
     let particles = [];
 
     const popBubble = (bubble) => {
@@ -113,13 +126,7 @@ const BubbleField = ({ className = '' }) => {
           b.y = height + b.radius;
           b.x = Math.random() * width;
         }
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(${BUBBLE_RGB}, ${b.opacity})`;
-        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = `rgba(${BUBBLE_RGB}, ${Math.min(b.opacity + 0.15, 0.5)})`;
-        ctx.stroke();
+        drawBubble(ctx, b);
       });
 
       bubbles = bubbles.filter((b) => !b.popped);
@@ -149,7 +156,9 @@ const BubbleField = ({ className = '' }) => {
       canvas.removeEventListener('mousemove', handlePointer);
       canvas.removeEventListener('click', handlePointer);
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
     <canvas ref={canvasRef} className={`absolute inset-0 h-full w-full ${className}`} aria-hidden="true" />

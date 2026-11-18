@@ -1,4 +1,10 @@
 export const studentData = {
+  // Réglages d'apparence par défaut (repli hors-ligne) — pilotables depuis
+  // /admin > Sections une fois l'API jointe (voir /api/settings).
+  uiSettings: {
+    glassCards: false,
+    bubblesEnabled: true,
+  },
   personal: {
     name: "Koné Cheick Ismael Thierry",
     title: "Génie Logiciel · Administration ITSM & Développement",

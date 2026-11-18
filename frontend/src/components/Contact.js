@@ -98,7 +98,7 @@ const Contact = () => {
         <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-2">
           {/* Informations de contact */}
           <Reveal className="space-y-6">
-            <Card className="border-border">
+            <Card>
               <CardHeader>
                 <CardTitle className="text-sm font-semibold text-foreground">
                   Informations de contact
@@ -125,7 +125,7 @@ const Contact = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-border">
+            <Card>
               <CardContent className="pt-6">
                 <h3 className="text-sm font-semibold text-foreground">Disponibilité</h3>
                 <ul className="mt-3 space-y-2 text-sm leading-[1.65] text-muted-foreground">
@@ -139,7 +139,7 @@ const Contact = () => {
 
           {/* Formulaire de contact */}
           <Reveal delay={0.1}>
-          <Card className="border-border">
+          <Card>
             <CardHeader>
               <CardTitle className="text-sm font-semibold text-foreground">
                 Envoyez-moi un message

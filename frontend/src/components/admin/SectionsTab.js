@@ -11,15 +11,33 @@ import { publicGet, adminSend } from '../../lib/adminApi';
 const SectionsTab = ({ token }) => {
   const [sections, setSections] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState(null);
+  const [savingSettings, setSavingSettings] = useState(false);
   const { toast } = useToast();
 
   const load = () => {
     publicGet('/api/sections')
       .then((rows) => setSections([...rows].sort((a, b) => a.sortOrder - b.sortOrder)))
       .catch(() => toast({ variant: 'destructive', title: 'Chargement des sections impossible' }));
+    publicGet('/api/settings')
+      .then(setSettings)
+      .catch(() => toast({ variant: 'destructive', title: 'Chargement des réglages d\'apparence impossible' }));
   };
 
   useEffect(load, []);
+
+  const toggleSetting = async (metaKey, settingKey) => {
+    const nextValue = !settings[settingKey];
+    setSavingSettings(true);
+    try {
+      await adminSend(token, `/api/admin/site-meta/${metaKey}`, 'PUT', { value: String(nextValue) });
+      setSettings((prev) => ({ ...prev, [settingKey]: nextValue }));
+    } catch {
+      toast({ variant: 'destructive', title: 'Enregistrement impossible' });
+    } finally {
+      setSavingSettings(false);
+    }
+  };
 
   const persist = async (next) => {
     setSaving(true);
@@ -49,7 +67,51 @@ const SectionsTab = ({ token }) => {
   if (!sections) return <p className="mt-6 text-sm text-muted-foreground">Chargement…</p>;
 
   return (
-    <div className="mt-6 space-y-3">
+    <div className="mt-6 space-y-8">
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-foreground">Apparence</h3>
+        <Card>
+          <CardContent className="flex items-center justify-between gap-4 pt-6">
+            <div>
+              <p className="text-sm font-medium text-foreground">Cartes en verre (glassmorphism)</p>
+              <p className="text-xs text-muted-foreground">
+                Donne à toutes les cartes du site un fond translucide et flouté façon iOS, au lieu du fond
+                blanc opaque habituel.
+              </p>
+            </div>
+            {settings && !savingSettings ? (
+              <Switch
+                checked={settings.glassCards}
+                onCheckedChange={() => toggleSetting('uiGlassCards', 'glassCards')}
+                aria-label="Activer les cartes en verre"
+              />
+            ) : (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-hidden="true" />
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center justify-between gap-4 pt-6">
+            <div>
+              <p className="text-sm font-medium text-foreground">Bulles animées de l'Accueil</p>
+              <p className="text-xs text-muted-foreground">
+                Désactive le décor de bulles en mouvement derrière le Hero (garde le reste des animations).
+              </p>
+            </div>
+            {settings && !savingSettings ? (
+              <Switch
+                checked={settings.bubblesEnabled}
+                onCheckedChange={() => toggleSetting('uiBubblesEnabled', 'bubblesEnabled')}
+                aria-label="Activer les bulles animées"
+              />
+            ) : (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-hidden="true" />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
         Masquer une section la retire du site sans supprimer son contenu. Le Hero
         (en-tête) et les Messages/Statistiques ne sont pas concernés.
@@ -77,6 +139,7 @@ const SectionsTab = ({ token }) => {
           </CardContent>
         </Card>
       ))}
+      </div>
     </div>
   );
 };

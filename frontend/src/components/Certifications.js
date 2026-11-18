@@ -19,7 +19,7 @@ const CertificationCard = ({ certification: c }) => {
 
   return (
     <Reveal className="h-full">
-    <Card className="flex h-full flex-col border-border">
+    <Card className="flex h-full flex-col">
       <CardContent className="flex flex-1 flex-col pt-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
