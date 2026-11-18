@@ -6,7 +6,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { useToast } from '../../hooks/use-toast';
-import { publicGet, adminSend, linesToArray, arrayToLines, linesToStats, statsToLines } from '../../lib/adminApi';
+import { publicGet, adminSend, linesToArray, arrayToLines } from '../../lib/adminApi';
 
 const FIELDS = [
   ['name', 'Nom complet'],
@@ -19,7 +19,6 @@ const FIELDS = [
   ['github', 'GitHub (URL)'],
   ['linkedin', 'LinkedIn (URL)'],
   ['avatar', 'Photo (chemin, ex. /images/moi.jpg)'],
-  ['heroHighlightTitle', 'Titre de la carte Hero (ex. "Stage — ...")'],
 ];
 
 const ProfileTab = ({ token }) => {
@@ -32,7 +31,6 @@ const ProfileTab = ({ token }) => {
       .then((p) => setForm({
         ...p,
         phonesText: arrayToLines(p.phones),
-        heroStatsText: statsToLines(p.heroHighlight?.stats),
       }))
       .catch(() => toast({ variant: 'destructive', title: 'Chargement du profil impossible' }));
   }, []);
@@ -46,7 +44,6 @@ const ProfileTab = ({ token }) => {
       await adminSend(token, '/api/admin/profile', 'PUT', {
         ...form,
         phones: linesToArray(form.phonesText),
-        heroStats: linesToStats(form.heroStatsText).map((s) => ({ value: s.value, label: s.label })),
       });
       toast({ title: 'Profil enregistré' });
     } catch {
@@ -100,15 +97,6 @@ const ProfileTab = ({ token }) => {
             <Label htmlFor="bio">Bio (section "Qui suis-je")</Label>
             <Textarea id="bio" rows={6} value={form.bio ?? ''} onChange={set('bio')} />
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Cartes de métriques (Hero) — une par ligne, "valeur | libellé"</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea rows={4} value={form.heroStatsText} onChange={set('heroStatsText')} placeholder="10 → 11 | Migration GLPI sur Docker Compose" />
         </CardContent>
       </Card>
 

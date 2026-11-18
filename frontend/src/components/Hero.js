@@ -67,24 +67,6 @@ const Hero = () => {
               {personal.location}
             </figcaption>
           </figure>
-
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <p className="text-sm font-medium text-foreground">
-              {personal.heroHighlight.title}
-            </p>
-            <dl className="mt-4 grid grid-cols-2 gap-4">
-              {personal.heroHighlight.stats.map((stat) => (
-                <div key={stat.label}>
-                  <dt className="font-mono text-xl font-semibold text-highlight">
-                    {stat.value}
-                  </dt>
-                  <dd className="mt-1 text-xs leading-snug text-muted-foreground">
-                    {stat.label}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
         </div>
       </div>
     </section>
