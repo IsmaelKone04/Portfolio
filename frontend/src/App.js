@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Portfolio from './components/Portfolio';
+import Admin from './components/Admin';
 import { Toaster } from './components/ui/toaster';
 import { trackPageView } from './lib/analytics';
 
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Portfolio />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
