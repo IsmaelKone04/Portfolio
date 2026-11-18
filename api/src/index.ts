@@ -157,6 +157,19 @@ app.get("/api/certifications/:id/file", async (c) => {
   return c.body(obj.body as ReadableStream);
 });
 
+// Réglages d'apparence globaux, pilotables depuis /admin (onglet Sections) :
+// cartes en verre (glassmorphism) et bulles animées de l'Accueil. Stockés dans
+// siteMeta (clé/valeur générique), comme referencesFallback.
+app.get("/api/settings", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const rows = await db.select().from(schema.siteMeta);
+  const map = Object.fromEntries(rows.map((r) => [r.key, r.value]));
+  return c.json({
+    glassCards: map.uiGlassCards === "true",
+    bubblesEnabled: map.uiBubblesEnabled !== "false",
+  });
+});
+
 app.get("/api/references", async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const rows = await db.select().from(schema.references);
