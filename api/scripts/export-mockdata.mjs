@@ -83,7 +83,6 @@ function buildProjects(studentData) {
       groupId: String(p.groupId),
       title: p.title,
       slug: candidate,
-      emoji: p.emoji ?? null,
       category: p.category ?? null,
       status: p.status ?? null,
       featured: Boolean(p.featured),

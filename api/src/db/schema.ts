@@ -66,7 +66,6 @@ export const projects = sqliteTable("projects", {
   groupId: text("group_id").references(() => groups.id),
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
-  emoji: text("emoji"),
   category: text("category"),
   status: text("status"),
   featured: integer("featured", { mode: "boolean" }).default(false),

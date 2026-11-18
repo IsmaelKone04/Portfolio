@@ -154,7 +154,7 @@ admin.delete("/projects/:id", async (c) => {
 
 function projectRow(p: Record<string, any>) {
   return {
-    groupId: p.groupId ?? null, title: p.title, slug: p.slug, emoji: p.emoji ?? null,
+    groupId: p.groupId ?? null, title: p.title, slug: p.slug,
     category: p.category ?? null, status: p.status ?? null, featured: p.featured ?? false,
     description: p.description ?? null, challenges: p.challenges ?? null, impact: p.impact ?? null,
     video: p.video ?? null, github: p.github ?? null, demo: p.demo ?? null, dockerhub: p.dockerhub ?? null,

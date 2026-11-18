@@ -71,8 +71,8 @@ async function main() {
   }
 
   for (const p of data.projects) {
-    lines.push(`INSERT INTO projects (group_id, title, slug, emoji, category, status, featured, description, challenges, impact, video, github, demo, dockerhub, sort_order) VALUES (${[
-      sql(p.groupId), sql(p.title), sql(p.slug), sql(p.emoji), sql(p.category), sql(p.status),
+    lines.push(`INSERT INTO projects (group_id, title, slug, category, status, featured, description, challenges, impact, video, github, demo, dockerhub, sort_order) VALUES (${[
+      sql(p.groupId), sql(p.title), sql(p.slug), sql(p.category), sql(p.status),
       sql(p.featured), sql(p.description), sql(p.challenges), sql(p.impact), sql(p.video),
       sql(p.github), sql(p.demo), sql(p.dockerhub), sql(p.sortOrder),
     ].join(", ")});`);
