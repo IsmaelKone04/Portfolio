@@ -35,7 +35,7 @@ const SkillPill = ({ skill }) => {
 
   if (!hasDetails) {
     return (
-      <span className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground">
+      <span className="rounded-full border border-transparent bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground">
         {skill.name}
       </span>
     );
@@ -46,7 +46,7 @@ const SkillPill = ({ skill }) => {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground transition-colors hover:border-primary/40 hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          className="rounded-full border border-transparent bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           {skill.name}
         </button>
@@ -69,8 +69,8 @@ const SkillPill = ({ skill }) => {
 const SkillGroup = ({ title, icon: Icon, skills }) => (
   <div className="rounded-2xl border border-border bg-card p-6">
     <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-accent">
-        <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+      <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
+        <Icon className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
       </div>
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
     </div>
@@ -99,7 +99,7 @@ const Skills = () => {
             système et développement. Cliquez sur une compétence pour voir ce que je sais
             concrètement en faire.
           </p>
-          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+          <div className="mx-auto mt-5 h-1 w-10 rounded-full bg-gradient-signature" aria-hidden="true" />
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">

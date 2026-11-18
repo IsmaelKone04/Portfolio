@@ -91,7 +91,7 @@ const Contact = () => {
             Un stage, une collaboration ou un échange technique sur ITSM, DevOps ou
             développement backend ? Je réponds rapidement.
           </p>
-          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+          <div className="mx-auto mt-5 h-1 w-10 rounded-full bg-gradient-signature" aria-hidden="true" />
         </div>
 
         <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-2">
@@ -112,8 +112,8 @@ const Contact = () => {
                     rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="flex items-center gap-4 rounded-xl border border-transparent p-3 transition-colors hover:border-border hover:bg-accent/40"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-accent">
-                      <method.icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
+                      <method.icon className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">{method.label}</p>

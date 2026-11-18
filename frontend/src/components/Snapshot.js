@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Radio, ArrowRight } from 'lucide-react';
+import { Radio, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { useContent } from '../contexts/ContentContext';
 
@@ -38,7 +38,7 @@ const Snapshot = () => {
             Qui je suis et où j'en suis, en un coup d'œil — le détail est dans les pages
             dédiées.
           </p>
-          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+          <div className="mx-auto mt-5 h-1 w-10 rounded-full bg-gradient-signature" aria-hidden="true" />
         </div>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
@@ -60,7 +60,7 @@ const Snapshot = () => {
                       {languages.map((lang) => (
                         <span
                           key={lang.name}
-                          className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
+                          className="rounded-full border border-transparent bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground"
                         >
                           {lang.name} — {lang.level}
                         </span>
@@ -78,7 +78,7 @@ const Snapshot = () => {
                       {interests.map((interest) => (
                         <span
                           key={interest}
-                          className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
+                          className="rounded-full border border-transparent bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground"
                         >
                           {interest}
                         </span>
@@ -92,12 +92,17 @@ const Snapshot = () => {
 
           {/* Compétences clés */}
           <div className="rounded-2xl border border-border bg-card p-6">
-            <h3 className="text-sm font-semibold text-foreground">Compétences clés</h3>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
+                <Sparkles className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
+              </div>
+              <h3 className="text-sm font-semibold text-foreground">Compétences clés</h3>
+            </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {highlights.map((skill) => (
                 <span
                   key={skill.name}
-                  className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground"
+                  className="rounded-full border border-transparent bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground"
                 >
                   {skill.name}
                 </span>

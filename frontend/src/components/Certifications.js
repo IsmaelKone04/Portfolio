@@ -20,10 +20,10 @@ const CertificationCard = ({ certification: c }) => {
     <Card className="flex h-full flex-col border-border">
       <CardContent className="flex flex-1 flex-col pt-6">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-accent">
-            <Icon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
+            <Icon className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
           </div>
-          <Badge variant="secondary">{TYPES[c.type]?.label ?? c.type}</Badge>
+          <Badge variant="soft">{TYPES[c.type]?.label ?? c.type}</Badge>
         </div>
 
         <h3 className="mt-4 text-base font-semibold text-foreground">{c.title}</h3>
@@ -75,7 +75,7 @@ const Certifications = () => {
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
             Diplômes, concours et formations — avec le justificatif quand il est disponible.
           </p>
-          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+          <div className="mx-auto mt-5 h-1 w-10 rounded-full bg-gradient-signature" aria-hidden="true" />
         </div>
 
         {list.length === 0 ? (

@@ -23,8 +23,8 @@ const ExperienceCard = ({ exp, isLast }) => {
       <Card className="ml-16 mb-8 border-border">
         <CardHeader className="pb-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-accent">
-              <Building2 className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
+              <Building2 className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
             </div>
             <div>
               <CardTitle className="text-lg font-semibold text-foreground">{exp.position}</CardTitle>
@@ -106,7 +106,7 @@ const Parcours = () => {
             développement — le détail des livrables de chacun est à retrouver dans
             les Réalisations.
           </p>
-          <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
+          <div className="mx-auto mt-5 h-1 w-10 rounded-full bg-gradient-signature" aria-hidden="true" />
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl">
