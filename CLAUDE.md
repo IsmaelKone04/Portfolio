@@ -158,11 +158,22 @@ ne s'active jamais en prod puisque cette variable n'y est pas configurée.
 
 ## 6. Design
 
-Le design actuel (tokens indigo, Inter + JetBrains Mono, mode sombre, zéro emoji/dégradé
-multicolore/barre de pourcentage) a été fait en suivant les specs détaillées de
-`02-meta-prompt-claude-code.md` (racine, conservé comme référence historique — ce
-travail est **déjà terminé**, ne pas le réexécuter). Réutiliser les tokens de
-`src/index.css` et les composants `ui/` plutôt que d'en recréer.
+Direction visuelle actuelle : **"Editorial Tech"** — fond blanc pur, encre `#0F172A`,
+accent bleu électrique (dégradé `#0033CC → #1D4ED8 → #3B82F6`), titres H1/H2 en Serif
+(Newsreader, contraste volontaire avec le corps en Inter), boutons et badges en forme de
+pilule, cartes à très grands rayons (`rounded-2xl` = 28px, `rounded-3xl` = 36px — ces
+tailles sont redéfinies dans `tailwind.config.js`, pas la valeur par défaut de Tailwind).
+Les cartes de Réalisations ont un bandeau dégradé en en-tête (numéro de carte, icône de
+domaine flottante à la jonction) plutôt qu'une vignette photo — les captures réelles
+restent consultables via le bouton Galerie. Le mode sombre n'est pas couvert par cette
+direction (demandée pour le mode clair) : il est maintenu avec le même langage (encre
+`#0B0F19` en fond, même bleu électrique en accent), adapté dans `src/index.css` au même
+titre que le reste des tokens.
+
+Avant cette direction, le design suivait des tokens indigo + mode sombre sans dégradé,
+posés en suivant `02-meta-prompt-claude-code.md` (racine, conservé comme référence
+historique) — remplacé depuis par la direction ci-dessus sur demande explicite. Réutiliser
+les tokens de `src/index.css` et les composants `ui/` plutôt que d'en recréer.
 
 ---
 

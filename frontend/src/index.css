@@ -42,62 +42,80 @@ code {
         "Courier New", monospace;
 }
 
+/* Contraste signature : titres en Serif, tout le reste reste en Sans (body). */
+h1,
+h2 {
+    font-family: "Newsreader Variable", Georgia, ui-serif, serif;
+}
+
+@layer utilities {
+    .bg-gradient-signature {
+        background-image: linear-gradient(135deg, #0033cc 0%, #1d4ed8 50%, #3b82f6 100%);
+    }
+    .bg-gradient-signature-deep {
+        background-image: linear-gradient(135deg, #0038ff 0%, #1e40af 100%);
+    }
+}
+
 
 
 @layer base {
   :root {
-        --background: 240 42.9% 98.6%;
-        --foreground: 240 31.2% 12.5%;
+        /* Editorial Tech : blanc pur, encre #0F172A, accents bleu électrique. */
+        --background: 0 0% 100%;
+        --foreground: 222 47.4% 11.2%;
         --card: 0 0% 100%;
-        --card-foreground: 240 31.2% 12.5%;
+        --card-foreground: 222 47.4% 11.2%;
         --popover: 0 0% 100%;
-        --popover-foreground: 240 31.2% 12.5%;
-        --primary: 247 91.3% 59.4%;
+        --popover-foreground: 222 47.4% 11.2%;
+        --primary: 223 38.9% 7.1%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 240 27.3% 95.7%;
-        --secondary-foreground: 240 31.2% 12.5%;
-        --muted: 240 27.3% 95.7%;
-        --muted-foreground: 240 11.7% 40.4%;
-        --accent: 243 69.2% 94.9%;
-        --accent-foreground: 249 70% 50.4%;
-        --highlight: 249 70% 50.4%;
+        --secondary: 210 40% 98%;
+        --secondary-foreground: 222 47.4% 11.2%;
+        --muted: 210 40% 98%;
+        --muted-foreground: 215 16.3% 46.9%;
+        --accent: 214 100% 96.9%;
+        --accent-foreground: 224 76.3% 48%;
+        --highlight: 221 83.2% 53.3%;
         --success: 154 63.3% 33.1%;
         --success-foreground: 0 0% 100%;
         --destructive: 3 66.9% 53.7%;
         --destructive-foreground: 0 0% 100%;
-        --border: 240 19.1% 90.8%;
-        --input: 240 19.1% 90.8%;
-        --ring: 247 91.3% 59.4%;
+        --border: 214 31.8% 91.4%;
+        --input: 214 31.8% 91.4%;
+        --ring: 221 83.2% 53.3%;
         --chart-1: 12 76% 61%;
         --chart-2: 173 58% 39%;
         --chart-3: 197 37% 24%;
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
-        --radius: 0.75rem;
+        --radius: 1.75rem;
     }
   .dark {
-        --background: 240 29.4% 6.7%;
-        --foreground: 240 23.8% 95.9%;
-        --card: 240 28% 9.8%;
-        --card-foreground: 240 23.8% 95.9%;
-        --popover: 240 28% 9.8%;
-        --popover-foreground: 240 23.8% 95.9%;
-        --primary: 247 91.3% 59.4%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 240 25.7% 13.7%;
-        --secondary-foreground: 240 23.8% 95.9%;
-        --muted: 240 25.7% 13.7%;
-        --muted-foreground: 240 11.2% 68.6%;
-        --accent: 240 33.3% 21.8%;
-        --accent-foreground: 230 93.5% 81.8%;
-        --highlight: 230 93.5% 81.8%;
+        /* Même langage (encre + bleu électrique), inversé pour fond sombre —
+           le brief ne couvre que le mode clair, ce mode reste géré ici. */
+        --background: 223 38.9% 7.1%;
+        --foreground: 210 40% 98%;
+        --card: 222 32% 11%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222 32% 11%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 217 91.2% 59.8%;
+        --primary-foreground: 222 47.4% 11.2%;
+        --secondary: 222 28% 15%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 222 28% 15%;
+        --muted-foreground: 215 16% 65%;
+        --accent: 221 45% 20%;
+        --accent-foreground: 213 94% 78%;
+        --highlight: 213 94% 78%;
         --success: 142 69.2% 58%;
         --success-foreground: 240 29.4% 6.7%;
         --destructive: 4 82.2% 71.4%;
         --destructive-foreground: 240 29.4% 6.7%;
-        --border: 240 16% 15.9%;
-        --input: 240 16% 15.9%;
-        --ring: 234 89.5% 73.9%;
+        --border: 222 25% 20%;
+        --input: 222 25% 20%;
+        --ring: 217 91.2% 59.8%;
         --chart-1: 220 70% 50%;
         --chart-2: 160 60% 45%;
         --chart-3: 30 80% 55%;

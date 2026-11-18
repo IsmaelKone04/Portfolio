@@ -14,7 +14,7 @@ const applyTheme = (theme) => {
   document.documentElement.classList.toggle('dark', theme === 'dark');
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
-    meta.setAttribute('content', theme === 'dark' ? '#0C0C16' : '#FAFAFD');
+    meta.setAttribute('content', theme === 'dark' ? '#0B0F19' : '#FFFFFF');
   }
 };
 

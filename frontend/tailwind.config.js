@@ -7,10 +7,17 @@ module.exports = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			serif: ['"Newsreader Variable"', 'Georgia', 'ui-serif', 'serif'],
+  			sans: ['"Inter Variable"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif']
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+  			xl: '1.25rem',
+  			'2xl': '1.75rem',
+  			'3xl': '2.25rem'
   		},
   		colors: {
   			background: 'hsl(var(--background))',
