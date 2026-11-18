@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
+import BubbleField from './BubbleField';
 import { useContent } from '../contexts/ContentContext';
 
 const Hero = () => {
@@ -14,10 +16,15 @@ const Hero = () => {
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[480px] bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary)/0.08),_transparent_70%)]"
         aria-hidden="true"
       />
+      <BubbleField className="-z-0" />
 
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <div className="relative mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         {/* Colonne gauche */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-highlight">
             {personal.name}
           </p>
@@ -34,24 +41,29 @@ const Hero = () => {
             « {personal.tagline} »
           </blockquote>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Button asChild size="lg" className="gap-2">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <Button asChild size="lg" className="btn-shine gap-2">
               <Link to="/realisations">
                 Voir mes réalisations
                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="outline" className="btn-shine">
               <Link to="/competences">Mes compétences</Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="outline" className="btn-shine">
               <Link to="/contact">Me contacter</Link>
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Colonne droite */}
-        <div className="flex flex-col gap-4">
+        <motion.div
+          className="flex flex-col gap-4"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
+        >
           <figure className="overflow-hidden rounded-2xl border border-border bg-card">
             <img
               src={personal.avatar}
@@ -63,7 +75,7 @@ const Hero = () => {
               {personal.location}
             </figcaption>
           </figure>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
