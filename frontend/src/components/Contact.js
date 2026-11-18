@@ -6,7 +6,6 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { useToast } from '../hooks/use-toast';
 import { useContent } from '../contexts/ContentContext';
-import ContactIntro from './ContactIntro';
 
 // Worker Cloudflare (api/) — voir REACT_APP_API_URL dans .env.local. Pas encore
 // de valeur en production : le formulaire retombe sur le mailto en cas d'échec.
@@ -94,8 +93,6 @@ const Contact = () => {
           </p>
           <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
         </div>
-
-        <ContactIntro />
 
         <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-2">
           {/* Informations de contact */}
