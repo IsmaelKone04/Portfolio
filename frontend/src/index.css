@@ -92,35 +92,43 @@ h2 {
         --radius: 1.75rem;
     }
   .dark {
-        /* Même langage (encre + bleu électrique), inversé pour fond sombre —
-           le brief ne couvre que le mode clair, ce mode reste géré ici. */
-        --background: 223 38.9% 7.1%;
+        /* "Deep Sapphire / Midnight Ocean" : bleu nuit saphir profond et lumineux,
+           plus riche que l'ancien encre plat — même famille bleu électrique que le
+           mode clair, jamais de noir neutre. */
+        --background: 219 70% 9.2%;
         --foreground: 210 40% 98%;
-        --card: 222 32% 11%;
+        --card: 217 64% 14.3%;
         --card-foreground: 210 40% 98%;
-        --popover: 222 32% 11%;
+        --popover: 217 64% 14.3%;
         --popover-foreground: 210 40% 98%;
-        --primary: 217 91.2% 59.8%;
-        --primary-foreground: 222 47.4% 11.2%;
-        --secondary: 222 28% 15%;
+        --primary: 213 94% 68%;
+        --primary-foreground: 219 70% 9.2%;
+        --secondary: 217 48% 18%;
         --secondary-foreground: 210 40% 98%;
-        --muted: 222 28% 15%;
-        --muted-foreground: 215 16% 65%;
-        --accent: 221 45% 20%;
-        --accent-foreground: 213 94% 78%;
-        --highlight: 213 94% 78%;
+        --muted: 217 42% 16%;
+        --muted-foreground: 215 25% 72%;
+        --accent: 217 50% 22%;
+        --accent-foreground: 198 93% 78%;
+        --highlight: 198 93% 66%;
         --success: 142 69.2% 58%;
-        --success-foreground: 240 29.4% 6.7%;
+        --success-foreground: 219 70% 9.2%;
         --destructive: 4 82.2% 71.4%;
-        --destructive-foreground: 240 29.4% 6.7%;
-        --border: 222 25% 20%;
-        --input: 222 25% 20%;
-        --ring: 217 91.2% 59.8%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
-        --chart-5: 340 75% 55%;
+        --destructive-foreground: 219 70% 9.2%;
+        --border: 217 38% 26%;
+        --input: 217 40% 24%;
+        --ring: 198 93% 66%;
+        --chart-1: 213 94% 68%;
+        --chart-2: 198 93% 60%;
+        --chart-3: 160 60% 45%;
+        --chart-4: 280 65% 65%;
+        --chart-5: 340 75% 60%;
+    }
+
+    .dark body {
+        background-image:
+            radial-gradient(ellipse 70% 50% at 15% -10%, rgba(37, 99, 235, 0.15), transparent 60%),
+            radial-gradient(ellipse 60% 40% at 90% 15%, rgba(56, 189, 248, 0.1), transparent 60%);
+        background-attachment: fixed;
     }
 }
 
