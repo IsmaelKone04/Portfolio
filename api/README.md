@@ -1,19 +1,19 @@
 # portfolio-api
 
-Worker Cloudflare (Hono + Drizzle + D1) pour ce qui est réellement dynamique dans le
-portfolio : formulaire de contact et analytics de visite (`mockData.js` reste la source
-du contenu statique, voir `CLAUDE.md` §4). Lecture publique sur `/api/*`, écriture
-réservée à `/api/admin/*` (protégé par Cloudflare Access, configuré dans le dashboard,
-pas dans ce dépôt).
+Worker Cloudflare (Hono + Drizzle + D1 + R2) qui sert tout le contenu du portfolio
+(profil, réalisations, compétences, certifications, etc.) — `mockData.js` côté frontend
+n'est plus qu'un repli si cette API est inatteignable (voir `CLAUDE.md` §4). Lecture
+publique sur `/api/*`, écriture réservée à `/api/admin/*` (protégé par Cloudflare
+Access, configuré dans le dashboard, pas dans ce dépôt).
 
 ## Ce qui est déjà en place
 
 - `src/db/schema.ts` — schéma Drizzle, calqué sur la forme réelle de `mockData.js`.
-- `src/index.ts` — endpoints de lecture publique (`/api/profile`, `/api/projects`,
-  `/api/projects/:slug`, `/api/skills`, `/api/education`, `/api/academic`,
-  `/api/method`, `/api/interests`, `/api/languages`, `/api/references`), l'écriture
-  publique du formulaire de contact (`POST /api/contact`) et le beacon d'analytics
-  (`POST /api/analytics/beacon`).
+- `src/index.ts` — endpoints de lecture publique (`/api/profile`, `/api/groups`,
+  `/api/projects`, `/api/projects/:slug`, `/api/skills`, `/api/certifications`,
+  `/api/certifications/:id/file`, `/api/method`, `/api/interests`, `/api/languages`,
+  `/api/references`, `/api/sections`), l'écriture publique du formulaire de contact
+  (`POST /api/contact`) et le beacon d'analytics (`POST /api/analytics/beacon`).
 - `scripts/export-mockdata.mjs` — lit `../frontend/src/data/mockData.js` tel quel et le
   normalise en JSON à la forme des tables.
 - `scripts/generate-seed.mjs` — transforme ce JSON en `drizzle/seed.sql`.
@@ -53,10 +53,18 @@ base D1 Cloudflare, puis `npm run deploy`.
 `profile` (PUT, singleton + hero stats), `groups` (POST/PUT/DELETE, avec
 achievements/stats imbriqués), `projects` (POST/PUT/DELETE, avec
 technologies/images imbriquées), `skills` (POST/PUT/DELETE, avec details
-imbriqués), `education` (POST/PUT/DELETE, avec courses imbriqués), `academic`
-(PUT, singleton), `method` / `interests` / `languages` / `references`
-(POST/PUT/DELETE), `site-meta/:key` (PUT) et `analytics` (GET, déplacé ici
-depuis la racine publique).
+imbriqués), `certifications` (POST/PUT/DELETE + `PUT`/`DELETE
+/certifications/:id/file` pour le justificatif, stocké dans le bucket R2
+`CERTIFICATIONS`), `method` / `interests` / `languages` / `references`
+(POST/PUT/DELETE), `sections` (GET/PUT, visibilité par page), `site-meta/:key`
+(PUT) et `analytics` (GET, déplacé ici depuis la racine publique).
+
+Les tables `education`/`academic` existent encore en base (migrations 0000-0002)
+mais ne sont plus exposées côté public ni admin : leur contenu réel a été repris
+dans `certifications` (migration 0005) quand le site est passé de 5 sections sur
+une page à des pages dédiées, dont Certifications couvre diplômes/formations/
+concours. Elles pourraient être supprimées par une migration dédiée si besoin,
+mais rien ne les lit aujourd'hui donc ça peut attendre.
 
 Les listes imbriquées (`achievements`, `stats`, `technologies`, `images`,
 `details`, `courses`) sont remplacées en bloc à chaque PUT/POST où elles sont
@@ -82,12 +90,12 @@ configuré (seule la variable `ENVIRONMENT` est définie dans `wrangler.toml`).
 ## Pas encore fait
 
 - Déploiement réel sur le compte Cloudflare d'Ismaël (`wrangler login`, `d1 create` /
-  migrations / seed en `--remote`, puis `npm run deploy`) — nécessite ses identifiants,
-  ne peut pas être fait depuis une session Claude Code.
+  migrations / seed en `--remote`, `r2 bucket create portfolio-certifications`, puis
+  `npm run deploy`) — nécessite ses identifiants, ne peut pas être fait depuis une
+  session Claude Code.
 - Authentification admin réelle (configuration Cloudflare Access côté dashboard
   Zero Trust) — le CRUD est prêt à être protégé, il ne reste que la config.
 
-**Décision prise, ne pas rouvrir sans demande explicite** : le frontend ne bascule pas
-sur cette API pour le contenu statique (profil, projets, compétences...) — `mockData.js`
-reste la source de vérité pour ça (voir `CLAUDE.md` §4). Cette API sert le formulaire de
-contact, l'analytics et un futur pilotage admin du contenu si un jour demandé.
+Le frontend lit désormais cette API pour tout son contenu (voir `CLAUDE.md` §4),
+avec repli sur `mockData.js` si elle est inatteignable — ce n'est donc plus une
+API secondaire au contenu statique mais la source de vérité.

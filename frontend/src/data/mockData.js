@@ -439,7 +439,7 @@ export const studentData = {
       }
     ],
 
-    // Pratique de l'IA en outil de travail — programme AiCE, voir `academic` plus bas.
+    // Pratique de l'IA en outil de travail — programme AiCE, voir `certifications` plus bas.
     // Pas de `details` : aucun chiffre ou usage précis au-delà de ce qui est déjà
     // documenté dans la formation AiCE, pour ne rien inventer.
     ai: [
@@ -1085,70 +1085,40 @@ export const studentData = {
     }
   ],
 
-  // Métadonnées du parcours académique (alimentent les cartes de la section Formation).
-  academic: {
-    currentYear: 3,
-    totalYears: 3,
-    average: "13.5/20",
-    specialization: "Génie Logiciel",
-    graduationYear: 2026
-  },
-
-  education: [
+  // Diplômes, concours et formations affichés sur la page Certifications.
+  // fileUrl/fileName restent null tant qu'aucun justificatif n'a été déposé via /admin.
+  certifications: [
     {
       id: 1,
-      institution: "Université de Technologie d'Abidjan",
-      degree: "Licence en Informatique — Génie Logiciel",
-      duration: "2023 - En cours",
-      location: "Riviera Palmeraie, CI",
+      title: "Licence en Informatique — Génie Logiciel",
+      type: "diplome",
+      organization: "Université de Technologie d'Abidjan",
+      date: "2023 - En cours",
       description:
         "Formation orientée développement logiciel, bases de données et administration système et réseaux. Moyenne actuelle : 13.5/20.",
-      courses: [
-        "Algorithmique et Structures de Données",
-        "Programmation Orientée Objet",
-        "Bases de Données",
-        "Développement Web",
-        "Administration Systèmes et Réseaux",
-        "Réseaux avancés",
-        "Cybersécurité",
-        "Architecture des ordinateurs",
-        "Intelligence Artificielle",
-        "Génie Logiciel"
-      ],
-      logo: "🎓"
+      fileUrl: null,
+      fileName: null
     },
     {
       id: 2,
-      institution: "AiCE — MTN × ALX Africa",
-      degree: "Formation IA appliquée (AI Career Essentials)",
-      duration: "Septembre 2026 - Novembre 2026",
-      location: "À distance",
+      title: "Formation IA appliquée (AI Career Essentials)",
+      type: "formation",
+      organization: "AiCE — MTN × ALX Africa",
+      date: "Septembre 2026 - Novembre 2026",
       description:
         "6 cours et 6 projets de maîtrise sur l'usage professionnel de l'IA — prompting structuré, éthique et responsabilité, création de contenus, analyse de données, personal branding. 100 % aux quiz.",
-      courses: [
-        "Les bases de l'IA pour le travail",
-        "L'art du prompt",
-        "Éthique et responsabilité",
-        "L'IA pour les contenus professionnels",
-        "Analyser les données et décider",
-        "Valoriser son profil et son portfolio"
-      ],
-      logo: "🧠"
+      fileUrl: null,
+      fileName: null
     },
     {
       id: 3,
-      institution: "Collège Privé Jules Ronsard 2",
-      degree: "Baccalauréat Série D",
-      duration: "2022 - 2023",
-      location: "Vridi Cité, CI",
+      title: "Baccalauréat Série D",
+      type: "diplome",
+      organization: "Collège Privé Jules Ronsard 2",
+      date: "2022 - 2023",
       description: "Baccalauréat scientifique avec mention Bien.",
-      courses: [
-        "Mathématiques Avancées",
-        "Physique-Chimie",
-        "SVT",
-        "Informatique"
-      ],
-      logo: "📚"
+      fileUrl: null,
+      fileName: null
     }
   ],
 

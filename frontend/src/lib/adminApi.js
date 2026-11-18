@@ -38,6 +38,18 @@ export async function adminSend(token, path, method, body) {
   return res.json().catch(() => ({}));
 }
 
+export async function adminUpload(token, path, file) {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(`${API_URL}${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
+  if (!res.ok) throw new Error(await parseError(res));
+  return res.json();
+}
+
 export async function adminDelete(token, path) {
   const res = await fetch(`${API_URL}${path}`, {
     method: 'DELETE',

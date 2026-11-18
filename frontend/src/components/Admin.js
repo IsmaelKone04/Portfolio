@@ -9,7 +9,7 @@ import SectionsTab from './admin/SectionsTab';
 import ProfileTab from './admin/ProfileTab';
 import ExperienceTab from './admin/ExperienceTab';
 import ProjectsTab from './admin/ProjectsTab';
-import EducationTab from './admin/EducationTab';
+import CertificationsTab from './admin/CertificationsTab';
 import MessagesTab from './admin/MessagesTab';
 import AnalyticsTab from './admin/AnalyticsTab';
 
@@ -97,7 +97,7 @@ const Admin = () => {
             <TabsTrigger value="profile">Profil</TabsTrigger>
             <TabsTrigger value="experience">Expériences</TabsTrigger>
             <TabsTrigger value="projects">Réalisations</TabsTrigger>
-            <TabsTrigger value="education">Formation</TabsTrigger>
+            <TabsTrigger value="certifications">Certifications</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="analytics">Statistiques</TabsTrigger>
           </TabsList>
@@ -106,7 +106,7 @@ const Admin = () => {
           <TabsContent value="profile"><ProfileTab token={token} /></TabsContent>
           <TabsContent value="experience"><ExperienceTab token={token} /></TabsContent>
           <TabsContent value="projects"><ProjectsTab token={token} /></TabsContent>
-          <TabsContent value="education"><EducationTab token={token} /></TabsContent>
+          <TabsContent value="certifications"><CertificationsTab token={token} /></TabsContent>
           <TabsContent value="messages"><MessagesTab token={token} /></TabsContent>
           <TabsContent value="analytics"><AnalyticsTab token={token} /></TabsContent>
         </Tabs>

@@ -18,6 +18,7 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import ProjectGallery from './ProjectGallery';
+import MethodBlock from './MethodBlock';
 import { useContent } from '../contexts/ContentContext';
 
 // Au-delà de cette longueur, la description est repliée par défaut (rien n'est
@@ -281,7 +282,17 @@ const Projects = () => {
     }))
     .filter((group) => group.projects.length > 0);
 
-  const visibleGroups = filter === 'all' ? groups : groups.filter((group) => group.exp.id === filter);
+  // Filtre par domaine (catégorie du projet) plutôt que par mission : un recruteur
+  // cherche plutôt "montre-moi du dev" que "montre-moi ce qui vient de tel stage" —
+  // le regroupement par mission reste visible comme contexte, pas comme filtre.
+  const categories = [...new Set(projects.map((p) => p.category).filter(Boolean))];
+
+  const visibleGroups = groups
+    .map((group) => ({
+      ...group,
+      projects: filter === 'all' ? group.projects : group.projects.filter((p) => p.category === filter),
+    }))
+    .filter((group) => group.projects.length > 0);
 
   return (
     <section id="projects" className="py-20">
@@ -297,7 +308,7 @@ const Projects = () => {
           <div className="mx-auto mt-5 h-0.5 w-10 bg-primary" aria-hidden="true" />
         </div>
 
-        {/* Filtre par mission */}
+        {/* Filtre par domaine */}
         <div className="mt-10 flex flex-wrap justify-center gap-2">
           <Button
             type="button"
@@ -308,15 +319,16 @@ const Projects = () => {
             Toutes <span className="opacity-70">({projects.length})</span>
           </Button>
 
-          {groups.map(({ exp, projects }) => (
+          {categories.map((category) => (
             <Button
-              key={exp.id}
+              key={category}
               type="button"
-              variant={filter === exp.id ? 'default' : 'outline'}
-              onClick={() => setFilter(exp.id)}
+              variant={filter === category ? 'default' : 'outline'}
+              onClick={() => setFilter(category)}
               className="rounded-full"
             >
-              {exp.shortName || exp.company} <span className="opacity-70">({projects.length})</span>
+              {category}{' '}
+              <span className="opacity-70">({projects.filter((p) => p.category === category).length})</span>
             </Button>
           ))}
         </div>
@@ -350,6 +362,8 @@ const Projects = () => {
             </div>
           ))}
         </div>
+
+        <MethodBlock />
       </div>
     </section>
   );

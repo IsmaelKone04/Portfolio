@@ -1,15 +1,34 @@
 import React from 'react';
-import { Code2, Layers, Server, Wrench, BrainCircuit } from 'lucide-react';
+import { Code2, Server, Lock, Wrench, BrainCircuit } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { useContent } from '../contexts/ContentContext';
 
-const GROUPS = [
-  { key: 'languages', title: 'Langages', icon: Code2 },
-  { key: 'frameworks', title: 'Frameworks', icon: Layers },
-  { key: 'systems', title: 'Infra & ITSM', icon: Server },
-  { key: 'tools', title: 'Outils & méthodes', icon: Wrench },
-  { key: 'ai', title: 'IA appliquée', icon: BrainCircuit },
-];
+// Compétences affichées par domaine plutôt que par langage/outil isolé — plus lisible
+// pour un recruteur qui scanne la page. Reclassement pur (aucune compétence ajoutée
+// ou retirée) ; les noms ci-dessous doivent rester synchronisés avec mockData.js /
+// le contenu réel saisi dans l'admin.
+const SECURITY_SKILL_NAMES = new Set([
+  'Sécurité applicative (JWT, RBAC, chiffrement)',
+  'SSO OpenID Connect (Keycloak)',
+]);
+const INFRA_TOOL_NAMES = new Set(['Intégration continue (GitHub Actions)']);
+
+function categorize(skills) {
+  const systems = skills.systems ?? [];
+  const tools = skills.tools ?? [];
+  return [
+    { key: 'dev', title: 'Développement', icon: Code2, skills: [...(skills.languages ?? []), ...(skills.frameworks ?? [])] },
+    {
+      key: 'infra',
+      title: 'Infrastructure & DevOps',
+      icon: Server,
+      skills: [...systems.filter((s) => !SECURITY_SKILL_NAMES.has(s.name)), ...tools.filter((s) => INFRA_TOOL_NAMES.has(s.name))],
+    },
+    { key: 'security', title: 'Sécurité & IAM', icon: Lock, skills: systems.filter((s) => SECURITY_SKILL_NAMES.has(s.name)) },
+    { key: 'methodology', title: 'Méthodologie & Outils', icon: Wrench, skills: tools.filter((s) => !INFRA_TOOL_NAMES.has(s.name)) },
+    { key: 'ai', title: 'IA appliquée', icon: BrainCircuit, skills: skills.ai ?? [] },
+  ].filter((group) => group.skills.length > 0);
+}
 
 const SkillPill = ({ skill }) => {
   const hasDetails = skill.details?.length > 0;
@@ -66,6 +85,7 @@ const SkillGroup = ({ title, icon: Icon, skills }) => (
 
 const Skills = () => {
   const { skills } = useContent();
+  const groups = categorize(skills);
 
   return (
     <section id="skills" className="py-20">
@@ -83,13 +103,8 @@ const Skills = () => {
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {GROUPS.map((group) => (
-            <SkillGroup
-              key={group.key}
-              title={group.title}
-              icon={group.icon}
-              skills={skills[group.key]}
-            />
+          {groups.map((group) => (
+            <SkillGroup key={group.key} title={group.title} icon={group.icon} skills={group.skills} />
           ))}
         </div>
       </div>

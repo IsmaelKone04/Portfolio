@@ -15,14 +15,13 @@ async function getJSON(path) {
 export async function fetchContent() {
   if (!API_URL) return null;
   try {
-    const [profile, groups, projects, skills, education, academic, method, interests, languages, referencesData] =
+    const [profile, groups, projects, skills, certifications, method, interests, languages, referencesData] =
       await Promise.all([
         getJSON('/api/profile'),
         getJSON('/api/groups'),
         getJSON('/api/projects'),
         getJSON('/api/skills'),
-        getJSON('/api/education'),
-        getJSON('/api/academic'),
+        getJSON('/api/certifications'),
         getJSON('/api/method'),
         getJSON('/api/interests'),
         getJSON('/api/languages'),
@@ -43,8 +42,7 @@ export async function fetchContent() {
       projectGroups: groups.filter((g) => g.kind === 'group'),
       projects,
       experience: groups.filter((g) => g.kind === 'experience'),
-      academic,
-      education,
+      certifications,
       method,
       interests,
       languages,

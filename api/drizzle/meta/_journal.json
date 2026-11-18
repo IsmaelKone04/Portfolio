@@ -36,6 +36,13 @@
       "when": 1794995923411,
       "tag": "0004_wise_frank_castle",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1794999999999,
+      "tag": "0005_seed_certifications",
+      "breakpoints": true
     }
   ]
 }

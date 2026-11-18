@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useContent, useSectionVisible } from '../contexts/ContentContext';
 
 const NAV_LINKS = [
-  { label: 'Accueil', href: '#hero', section: null },
-  { label: 'Réalisations', href: '#projects', section: 'projects' },
-  { label: 'Parcours', href: '#experience', section: 'experience' },
-  { label: 'Contact', href: '#contact', section: 'contact' },
+  { label: 'Accueil', to: '/', section: null },
+  { label: 'Réalisations', to: '/realisations', section: 'realisations' },
+  { label: 'Compétences', to: '/competences', section: 'competences' },
+  { label: 'Certifications', to: '/certifications', section: 'certifications' },
+  { label: 'Contact', to: '/contact', section: 'contact' },
 ];
+
+const navLinkClass = ({ isActive }) =>
+  `text-sm transition-colors hover:text-foreground ${
+    isActive ? 'font-medium text-foreground' : 'text-muted-foreground'
+  }`;
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { personal } = useContent();
-  const projectsVisible = useSectionVisible('projects');
-  const experienceVisible = useSectionVisible('experience');
+  const realisationsVisible = useSectionVisible('realisations');
+  const competencesVisible = useSectionVisible('competences');
+  const certificationsVisible = useSectionVisible('certifications');
   const contactVisible = useSectionVisible('contact');
-  const sectionVisibility = { projects: projectsVisible, experience: experienceVisible, contact: contactVisible };
+  const sectionVisibility = {
+    realisations: realisationsVisible,
+    competences: competencesVisible,
+    certifications: certificationsVisible,
+    contact: contactVisible,
+  };
   const navLinks = NAV_LINKS.filter((link) => !link.section || sectionVisibility[link.section]);
 
   const handleNavClick = () => setIsMenuOpen(false);
@@ -24,7 +37,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 border-b border-border bg-background/80 backdrop-blur-sm sm:h-16">
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
-        <a href="#hero" className="flex items-center gap-2.5 font-semibold text-foreground">
+        <Link to="/" className="flex items-center gap-2.5 font-semibold text-foreground">
           <img
             src={personal.avatar}
             alt=""
@@ -32,17 +45,13 @@ const Header = () => {
             className="h-7 w-7 rounded-full object-cover"
           />
           <span>{personal.displayName}</span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <NavLink key={link.to} to={link.to} end={link.to === '/'} className={navLinkClass}>
               {link.label}
-            </a>
+            </NavLink>
           ))}
           <span className="h-5 w-px bg-border" aria-hidden="true" />
           <ThemeToggle />
@@ -70,14 +79,19 @@ const Header = () => {
         <nav className="border-b border-border bg-background px-6 py-4 md:hidden">
           <ul className="flex flex-col gap-3">
             {navLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
+              <li key={link.to}>
+                <NavLink
+                  to={link.to}
+                  end={link.to === '/'}
                   onClick={handleNavClick}
-                  className="block py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  className={({ isActive }) =>
+                    `block py-1 text-sm transition-colors hover:text-foreground ${
+                      isActive ? 'font-medium text-foreground' : 'text-muted-foreground'
+                    }`
+                  }
                 >
                   {link.label}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>

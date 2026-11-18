@@ -1,14 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { useContent } from '../contexts/ContentContext';
 
 const Hero = () => {
   const { personal } = useContent();
-
-  const scrollToSection = (sectionId) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <section id="hero" className="relative overflow-hidden pt-28 pb-16 sm:pt-32 sm:pb-20">
@@ -38,18 +35,17 @@ const Hero = () => {
           </blockquote>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button size="lg" onClick={() => scrollToSection('projects')} className="gap-2">
-              Voir mes réalisations
-              <ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+            <Button asChild size="lg" className="gap-2">
+              <Link to="/realisations">
+                Voir mes réalisations
+                <ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              </Link>
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => scrollToSection('contact')}
-              className="gap-2"
-            >
-              Me contacter
-              <ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+            <Button asChild size="lg" variant="outline">
+              <Link to="/competences">Mes compétences</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link to="/contact">Me contacter</Link>
             </Button>
           </div>
         </div>
