@@ -1,33 +1,40 @@
 # CLAUDE.md — Portfolio d'Ismaël Koné
 
-Ce fichier guide toute session Claude Code travaillant sur ce dépôt. **Objectif de la
-mission : faire évoluer ce portfolio d'un template à demi-personnalisé vers un portfolio
-professionnel réel, en intégrant les compétences acquises pendant le stage YeshiGroup
-(migration/administration GLPI).** Langue du site et des échanges : **français**.
+Ce fichier guide toute session Claude Code travaillant sur ce dépôt. Langue du site, des
+commits et de **toutes les réponses à l'utilisateur** : **français** (il ne lit pas
+l'anglais).
 
 ---
 
 ## 1. Ce qu'est le projet
 
-Portfolio personnel full-stack, généré au départ sur la plateforme **Emergent**
-(image `fastapi_react_mongo_shadcn`). Deux services :
+Portfolio personnel full-stack, généré au départ sur la plateforme Emergent puis
+redessiné dans un style sobre et professionnel (voir §6). Trois dossiers :
 
-- **frontend/** — application **React 19** (Create React App via **CRACO**), **Tailwind CSS**,
-  composants **shadcn/ui** (Radix UI), icônes **lucide-react**, routing **react-router-dom**.
-  Tout le contenu affiché vient d'un **seul fichier de données** :
-  [`frontend/src/data/mockData.js`](frontend/src/data/mockData.js).
-- **backend/** — API **FastAPI** + **MongoDB** (via `motor`), préfixe `/api`.
-  Aujourd'hui quasi vide : uniquement un endpoint de santé et un `status_checks` de démo
-  ([`backend/server.py`](backend/server.py)). Le formulaire de contact du front n'est **pas**
-  encore branché dessus.
-
-Le portfolio est **piloté par les données** : modifier `mockData.js` suffit à changer
-presque tout le contenu (profil, compétences, projets, expériences, formation, langues).
-Les composants de `frontend/src/components/` ne font que consommer cette structure.
+- **frontend/** — React 19 (Create React App via **CRACO**), **Tailwind CSS**,
+  composants **shadcn/ui** (Radix UI), icônes **lucide-react**, routing
+  **react-router-dom**. Le contenu statique (profil, compétences, projets, expériences,
+  formation, langues) vient d'un seul fichier : [`frontend/src/data/mockData.js`](frontend/src/data/mockData.js)
+  — voir §4 pour la décision de l'y garder.
+- **api/** — Worker Cloudflare (**Hono + Drizzle + D1**), préfixe `/api`. Gère ce qui est
+  réellement dynamique : formulaire de contact (`POST /api/contact`), analytics maison
+  sans cookie tiers (`POST /api/analytics/beacon`), et un CRUD admin complet sur
+  `/api/admin/*` (détails dans [`api/README.md`](api/README.md)). **Pas encore déployé
+  sur le vrai compte Cloudflare** — tourne seulement en local via `wrangler dev --local`
+  (D1 émulé). Le déploiement réel (`wrangler login`, `d1 create --remote`, `deploy`) et
+  la configuration de Cloudflare Access pour `/api/admin/*` nécessitent les identifiants
+  Cloudflare d'Ismaël : à faire par lui, pas depuis une session Claude Code.
+- **backend/** — ancien scaffold FastAPI + MongoDB, **non utilisé**. Ne pas y développer
+  de nouvelle fonctionnalité ; `api/` l'a remplacé pour tout ce qui est dynamique.
 
 ### Branche de travail
-Le vrai projet vit sur la branche **`conflict_120725_1247`** (PAS `main`, qui n'a qu'un
-squelette). Reste sur cette branche.
+Le travail actif vit sur **`redesign/pro-ui`** — pas `main` (squelette seulement), pas
+`conflict_120725_1247` (ancienne branche, abandonnée). Reste sur `redesign/pro-ui`.
+
+### Déploiement
+Cloudflare Pages redéploie automatiquement le frontend à chaque push sur
+`redesign/pro-ui`. **Ne jamais pousser sans validation explicite d'Ismaël pour le
+chantier concerné** — committer localement et tester sont délégués, le push ne l'est pas.
 
 ---
 
@@ -37,22 +44,28 @@ squelette). Reste sur cette branche.
 frontend/
   src/
     components/
-      Hero.js  About.js  Skills.js  Projects.js
-      Experience.js  Education.js  Contact.js  Portfolio.js  (assemble tout)
-      ui/                      # composants shadcn/ui réutilisables
-    data/mockData.js           # ★ SOURCE UNIQUE du contenu — c'est ici qu'on édite
-    hooks/  lib/  App.js  App.css  index.js  index.css
-  package.json  tailwind.config.js  craco.config.js  .env
+      Hero.js  About.js  Skills.js  Projects.js  Experience.js  Education.js
+      Contact.js  Admin.js  Portfolio.js (assemble tout)  ui/ (shadcn/ui)
+    data/mockData.js           # ★ SOURCE UNIQUE du contenu statique
+    lib/analytics.js           # beacon maison vers api/
+    hooks/  App.js  App.css  index.js  index.css
+  public/_redirects            # SPA fallback (nécessaire : il y a 2 routes, / et /admin)
+  package.json  tailwind.config.js  craco.config.js  .env  .env.local (non versionné)
+api/
+  src/
+    index.ts                   # lecture publique + POST /api/contact + beacon
+    admin.ts                   # CRUD protégé, monté sur /api/admin/*
+    db/schema.ts                # schéma Drizzle (calqué sur mockData.js)
+    middleware/adminAuth.ts     # Cloudflare Access en prod, jeton .dev.vars en local
+  wrangler.toml  README.md      # état détaillé, commandes de déploiement
 backend/
-  server.py                    # FastAPI, endpoints /api/*
-  requirements.txt  .env        # MONGO_URL, DB_NAME
-CV_competences_Ismael_Kone.md  # ★ contenu RÉEL de référence (voir §4)
-Portfolio_Ismael_Kone.md       # ★ contenu RÉEL de référence (voir §4)
+  server.py  requirements.txt  .env   # legacy, non utilisé
+CV_competences_Ismael_Kone.md  # ★ contenu RÉEL de référence
+Portfolio_Ismael_Kone.md       # ★ contenu RÉEL de référence
 ```
 
-Les deux `*.md` à la racine ne font pas partie de l'app : ce sont les **sources de vérité
-rédactionnelles** (CV + descriptif détaillé du stage). Ne pas les publier tels quels ;
-s'en servir pour remplir `mockData.js`.
+Les deux `*.md` à la racine ne font pas partie de l'app : ce sont les sources de vérité
+rédactionnelles (CV + descriptif détaillé des missions). Ne pas les publier tels quels.
 
 ---
 
@@ -65,91 +78,76 @@ yarn install
 yarn start
 ```
 
-**Backend** (port 8001, nécessite un MongoDB local) :
+**API Cloudflare** (port 8787, D1 émulé en local — voir `api/README.md` pour le détail) :
 ```bash
-cd backend
-pip install -r requirements.txt
-uvicorn server:app --reload --port 8001
+cd api
+npm install
+npm run dev
 ```
 
-- Le front lit l'URL du backend dans `frontend/.env` (`REACT_APP_BACKEND_URL`). En local,
-  la pointer sur `http://localhost:8001`. **Toujours** appeler l'API via cette variable +
-  préfixe `/api`, jamais une URL en dur.
-- Ne jamais committer de secret. `.env` reste local.
+- Le front lit l'URL de l'API dans `frontend/.env.local` (`REACT_APP_API_URL`, non
+  versionné). **Toujours** appeler l'API via cette variable, jamais une URL en dur.
+- Ne jamais committer de secret (`.env.local`, `api/.dev.vars` restent locaux).
+- Le `backend/` FastAPI n'est plus utilisé : pas besoin de le lancer.
 
 ---
 
-## 4. Mission : ce qu'il faut améliorer
+## 4. Architecture des données — décision prise, ne pas la rouvrir sans demande
 
-Le contenu actuel de `mockData.js` est **partiellement fictif** (hérité du template) et
-ne reflète PAS le stage le plus important d'Ismaël. Objectifs, par priorité :
+Le contenu statique (profil, ~20 projets, expériences, formation, compétences) reste
+dans `mockData.js` : il change rarement, et le servir depuis l'API D1 ajouterait une
+dépendance réseau et des états de chargement sans bénéfice visible pour un visiteur.
+L'API Cloudflare (`api/`) existe pour ce qui est réellement dynamique :
 
-### 4.1 — Intégrer le stage YeshiGroup / GLPI (priorité haute)
-Ismaël a réalisé un stage de technicien support (juin–août 2026) chez **YeshiGroup (DSI)**
-dont le périmètre a largement dépassé le support N1. **Ajouter ce stage** comme
-**expérience phare** et comme **projet vedette**. Contenu réel (détaillé dans
-`CV_competences_Ismael_Kone.md` et `Portfolio_Ismael_Kone.md`) :
-
-- Migration de la plateforme ITSM **GLPI 10 → 11** pour un groupe présent dans **14 pays**.
-- Architecture **Docker / Docker Compose** multi-services (GLPI, MariaDB, reverse-proxy
-  **nginx**, terminaison **TLS/HTTPS**).
-- Développement de **4 plugins internes en PHP** : routage automatique intelligent des
-  tickets (choix du technicien selon compétence + présence réelle + charge), pointage des
-  techniciens, refonte visuelle de l'interface, personnalisation de la page de connexion.
-- **SSO Microsoft** : Keycloak + oauth2-proxy en **OpenID Connect**, courtage d'identité
-  vers **Microsoft Entra ID**.
-- **Restauration d'un helpdesk de production après cyberattaque** (reconstruction Docker,
-  restauration base/fichiers, HTTPS, sauvegarde hebdomadaire automatisée).
-- Chaîne de **notifications e-mail (SMTP)** rétablie ; référentiel fiabilisé.
-- Première prise en main d'un **serveur distant** (SSH, hébergement GoDaddy).
-
-### 4.2 — Mettre à jour les compétences (`skills`)
-Enrichir/rééquilibrer les niveaux à partir des compétences réellement acquises (voir la
-section « Compétences » de `CV_competences_Ismael_Kone.md`) : **Docker/Docker Compose,
-nginx, Linux/SSH, PHP (plugins GLPI), SQL/MariaDB, SSO OpenID Connect, HTTPS/TLS,
-administration ITSM/GLPI, débogage par analyse de logs**. Garder des niveaux honnêtes et
-cohérents avec un profil stagiaire monté en compétences (pas de 95 % partout).
-
-### 4.3 — Nettoyer les données fictives résiduelles
-Plusieurs éléments viennent encore du template et doivent être vérifiés/corrigés ou
-supprimés s'ils ne sont pas réels :
-- `personal.linkedin` pointe vers `jean-baptiste-kouadio` (nom du template) — **à corriger**.
-- Projets `EduConnect CI`, `AgriTech Mobile`, `Smart Parking`, `Traducteur Langues Locales` :
-  confirmer lesquels sont réels ; remplacer/retirer les fictifs. Le projet GLPI devient le
-  projet vedette.
-- `certifications` (AWS/Google/Meta avec `credentialId` en `...JBK`/année 2024) : semblent
-  hérités du template — **à valider ou retirer** (ne rien inventer).
-- Vérifier la cohérence de `experience` (intitulés, dates, réalisations).
-
-**Règle d'or : ne jamais inventer de contenu.** Toute donnée ajoutée doit venir des deux
-`.md` de référence ou être explicitement confirmée par Ismaël. En cas de doute, demander.
-
-### 4.4 — Améliorations optionnelles (après validation)
-- Brancher le **formulaire de contact** sur un vrai endpoint FastAPI (`POST /api/contact`
-  stockant en MongoDB) plutôt que le `toast` fictif actuel.
-- Section/badge dédiée aux réalisations chiffrées (4 plugins, 14 pays, ~44 problèmes
-  auto-catégorisés, helpdesk restauré) — déjà rédigées dans le CV.
-- Vérifier le responsive et l'accessibilité (contraste, focus clavier) après changements.
+- Formulaire de contact → table `contact_messages`, lue via `/admin`.
+- Analytics de visite (beacon maison, pas de cookie tiers) → table `page_views`, lue via
+  `/admin`.
+- Un CRUD admin complet existe déjà côté Worker (`api/src/admin.ts`) pour piloter tout
+  le contenu si une bascule complète était un jour explicitement demandée par Ismaël —
+  **non engagée pour l'instant**.
 
 ---
 
-## 5. Conventions de travail
+## 5. Page d'administration (`/admin`)
 
-- **Éditer le contenu dans `mockData.js`**, pas en dur dans les composants JSX.
-- Respecter le design system existant (Tailwind + shadcn/ui, palette bleu/indigo). Réutiliser
-  les composants `ui/` plutôt que d'en réécrire.
-- **Français** pour tout le contenu visible et les commits.
-- Travailler **par étapes validées** : proposer le changement, montrer le diff, attendre le
-  feu vert avant d'enchaîner. Ne pas committer/pusher sans demande explicite.
-- Contenu réel uniquement (cf. §4.3). Pas de placeholder inventé.
-- Ne pas exposer de données personnelles sensibles au-delà de ce qu'Ismaël veut publier
-  (téléphone, adresse e-mail : lui demander avant de laisser en clair sur un site public).
+`frontend/src/components/Admin.js` lit `GET /api/admin/contact` et
+`GET /api/admin/analytics` via un jeton saisi à la main (stocké en `sessionStorage`,
+jamais en dur dans le code, jamais dans le bundle). En prod, `/api/admin/*` doit être
+protégé par Cloudflare Access (dashboard Zero Trust, hors dépôt — nécessite le compte
+Cloudflare d'Ismaël, pas encore fait). En local, `ADMIN_DEV_SECRET` dans `api/.dev.vars`
+(non committé) fait office de repli ; ce repli ne s'active jamais en prod puisque cette
+variable n'y est pas configurée.
 
 ---
 
-## 6. Références rapides
+## 6. Design
+
+Le design actuel (tokens indigo, Inter + JetBrains Mono, mode sombre, zéro emoji/dégradé
+multicolore/barre de pourcentage) a été fait en suivant les specs détaillées de
+`02-meta-prompt-claude-code.md` (racine, conservé comme référence historique — ce
+travail est **déjà terminé**, ne pas le réexécuter). Réutiliser les tokens de
+`src/index.css` et les composants `ui/` plutôt que d'en recréer.
+
+---
+
+## 7. Conventions de travail
+
+- Éditer le contenu statique dans `mockData.js`, pas en dur dans les composants JSX
+  (exception : contact/analytics/admin passent par l'API, voir §4).
+- **Contenu réel uniquement.** Ne jamais inventer de donnée : tout ajout vient des deux
+  `.md` de référence ou d'une confirmation explicite d'Ismaël. En cas de doute, demander.
+- Ne pas exposer de données personnelles sensibles au-delà de ce qu'Ismaël veut publier.
+- Anonymiser les missions freelance (pas de nom de client ni de filiale).
+- Committer, tester et choisir le prochain chantier peuvent être faits de façon
+  autonome ; **pousser sur GitHub attend toujours une validation explicite d'Ismaël**
+  pour le chantier concerné (voir §1, Déploiement).
+
+---
+
+## 8. Références rapides
 
 - Contenu rédactionnel réel : `CV_competences_Ismael_Kone.md`, `Portfolio_Ismael_Kone.md`.
 - Données du site : `frontend/src/data/mockData.js`.
+- Worker API : `api/src/index.ts` (lecture publique), `api/src/admin.ts` (écriture,
+  protégé), `api/README.md` (état détaillé, commandes de déploiement restantes).
 - Assemblage des sections : `frontend/src/components/Portfolio.js`.
-- API : `backend/server.py` (préfixe `/api`).

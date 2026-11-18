@@ -1,20 +1,25 @@
 # portfolio-api
 
-Worker Cloudflare (Hono + Drizzle + D1) qui remplace `mockData.js` comme source du
-contenu du portfolio. Lecture publique sur `/api/*`, écriture réservée à `/api/admin/*`
-(protégé par Cloudflare Access, configuré dans le dashboard, pas dans ce dépôt).
+Worker Cloudflare (Hono + Drizzle + D1) pour ce qui est réellement dynamique dans le
+portfolio : formulaire de contact et analytics de visite (`mockData.js` reste la source
+du contenu statique, voir `CLAUDE.md` §4). Lecture publique sur `/api/*`, écriture
+réservée à `/api/admin/*` (protégé par Cloudflare Access, configuré dans le dashboard,
+pas dans ce dépôt).
 
 ## Ce qui est déjà en place
 
 - `src/db/schema.ts` — schéma Drizzle, calqué sur la forme réelle de `mockData.js`.
 - `src/index.ts` — endpoints de lecture publique (`/api/profile`, `/api/projects`,
   `/api/projects/:slug`, `/api/skills`, `/api/education`, `/api/academic`,
-  `/api/method`, `/api/interests`, `/api/languages`, `/api/references`) + un beacon
-  d'analytics (`POST /api/analytics/beacon`) et une lecture agrégée
-  (`GET /api/admin/analytics`).
+  `/api/method`, `/api/interests`, `/api/languages`, `/api/references`), l'écriture
+  publique du formulaire de contact (`POST /api/contact`) et le beacon d'analytics
+  (`POST /api/analytics/beacon`).
 - `scripts/export-mockdata.mjs` — lit `../frontend/src/data/mockData.js` tel quel et le
   normalise en JSON à la forme des tables.
 - `scripts/generate-seed.mjs` — transforme ce JSON en `drizzle/seed.sql`.
+- Côté front : `frontend/src/lib/analytics.js` (beacon au chargement de page) et
+  `frontend/src/components/Admin.js` (page `/admin`, lit `GET /api/admin/contact` et
+  `GET /api/admin/analytics` ci-dessous via un jeton saisi à la main).
 
 ## Ce qu'il reste à faire à la main (côté compte Cloudflare)
 
@@ -76,7 +81,13 @@ configuré (seule la variable `ENVIRONMENT` est définie dans `wrangler.toml`).
 
 ## Pas encore fait
 
+- Déploiement réel sur le compte Cloudflare d'Ismaël (`wrangler login`, `d1 create` /
+  migrations / seed en `--remote`, puis `npm run deploy`) — nécessite ses identifiants,
+  ne peut pas être fait depuis une session Claude Code.
 - Authentification admin réelle (configuration Cloudflare Access côté dashboard
   Zero Trust) — le CRUD est prêt à être protégé, il ne reste que la config.
-- Bascule du frontend pour lire cette API au lieu de `mockData.js`.
-- Interface d'administration (front) consommant ce CRUD.
+
+**Décision prise, ne pas rouvrir sans demande explicite** : le frontend ne bascule pas
+sur cette API pour le contenu statique (profil, projets, compétences...) — `mockData.js`
+reste la source de vérité pour ça (voir `CLAUDE.md` §4). Cette API sert le formulaire de
+contact, l'analytics et un futur pilotage admin du contenu si un jour demandé.
