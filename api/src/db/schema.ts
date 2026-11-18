@@ -177,6 +177,15 @@ export const siteMeta = sqliteTable("site_meta", {
   value: text("value"),
 });
 
+// Visibilité des sections du site, pilotée depuis /admin (afficher/masquer une
+// section entière sans toucher à son contenu).
+export const sections = sqliteTable("sections", {
+  key: text("key").primaryKey(), // ex. "about", "skills", "projects"...
+  label: text("label").notNull(),
+  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
 // Messages reçus via le formulaire de contact du front (POST /api/contact).
 export const contactMessages = sqliteTable("contact_messages", {
   id: integer("id").primaryKey({ autoIncrement: true }),

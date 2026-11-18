@@ -22,6 +22,13 @@
       "when": 1794990048285,
       "tag": "0002_wooden_blue_shield",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1794991512885,
+      "tag": "0003_quiet_omega_flight",
+      "breakpoints": true
     }
   ]
 }

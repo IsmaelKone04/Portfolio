@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
 import * as schema from "./db/schema";
 import { adminAuth } from "./middleware/adminAuth";
 
@@ -409,6 +409,30 @@ admin.delete("/references/:id", async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const result = await db.delete(schema.references).where(eq(schema.references.id, Number(c.req.param("id"))));
   if (!result.meta.changes) return c.json({ error: "not_found" }, 404);
+  return c.json({ ok: true });
+});
+
+// --- Sections (afficher/masquer/réordonner une section entière du site) ----
+
+admin.get("/sections", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const rows = await db.select().from(schema.sections).orderBy(asc(schema.sections.sortOrder));
+  return c.json(rows);
+});
+
+admin.put("/sections", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const body = await c.req.json<{ key: string; visible?: boolean; sortOrder?: number }[]>();
+  if (!Array.isArray(body)) return c.json({ error: "invalid_body" }, 400);
+
+  for (const [i, s] of body.entries()) {
+    const [existing] = await db.select().from(schema.sections).where(eq(schema.sections.key, s.key));
+    if (!existing) continue;
+    await db.update(schema.sections).set({
+      visible: s.visible ?? existing.visible,
+      sortOrder: s.sortOrder ?? i,
+    }).where(eq(schema.sections.key, s.key));
+  }
   return c.json({ ok: true });
 });
 

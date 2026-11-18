@@ -131,6 +131,12 @@ app.get("/api/languages", async (c) => {
   return c.json(await db.select().from(schema.languages).orderBy(asc(schema.languages.position)));
 });
 
+app.get("/api/sections", async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const rows = await db.select().from(schema.sections).orderBy(asc(schema.sections.sortOrder));
+  return c.json(rows);
+});
+
 app.get("/api/references", async (c) => {
   const db = drizzle(c.env.DB, { schema });
   const rows = await db.select().from(schema.references);
