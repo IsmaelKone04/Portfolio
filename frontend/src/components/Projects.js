@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Building2,
   Calendar,
-  ImageOff,
   Images,
   Github,
   ExternalLink,
@@ -13,6 +12,10 @@ import {
   Phone,
   Linkedin,
   ChevronDown,
+  Code2,
+  Server,
+  ShieldCheck,
+  LifeBuoy,
 } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
@@ -25,55 +28,58 @@ import { useContent } from '../contexts/ContentContext';
 // supprimé : le texte complet et le résultat restent accessibles via "Voir les détails").
 const DESCRIPTION_TRUNCATE_LENGTH = 140;
 
-const ProjectCard = ({ project }) => {
+// Icône flottante de la carte, choisie par domaine plutôt que par projet individuel.
+const CATEGORY_ICONS = {
+  Développement: Code2,
+  Infrastructure: Server,
+  Sécurité: ShieldCheck,
+  ITSM: LifeBuoy,
+};
+
+const ProjectCard = ({ project, index, total }) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const images = project.images || [];
   const hasMedia = images.length > 0 || Boolean(project.video);
   const hasExpandableContent =
     Boolean(project.impact) || (project.description?.length ?? 0) > DESCRIPTION_TRUNCATE_LENGTH;
+  const CategoryIcon = CATEGORY_ICONS[project.category] ?? Code2;
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden border-border">
-      <div className="relative">
-        {images.length > 0 ? (
-          <img src={images[0]} alt={project.title} className="h-48 w-full object-cover" />
-        ) : (
-          // Pas de capture disponible pour ce chantier.
-          <div className="flex h-48 w-full items-center justify-center bg-muted">
-            <ImageOff className="h-8 w-8 text-muted-foreground" strokeWidth={1.75} aria-hidden="true" />
-          </div>
-        )}
+    <Card className="flex h-full flex-col overflow-hidden rounded-2xl border-border">
+      {/* Bandeau éditorial : dégradé signature, numéro de carte, icône flottante au
+          seuil du corps blanc — remplace la vignette photo, toujours consultable
+          en détail via le bouton Galerie plus bas. */}
+      <div className="relative h-28 overflow-hidden bg-gradient-signature">
+        <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10" aria-hidden="true" />
+        <div className="absolute -bottom-12 left-16 h-28 w-28 rounded-full bg-white/10" aria-hidden="true" />
 
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-4 font-serif text-xl font-semibold text-white/35">
+          {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
+        </div>
+
+        <div className="absolute top-3 left-4">
           <Badge
             className={
               project.status === 'Terminé'
                 ? 'bg-success text-success-foreground hover:bg-success'
-                : 'bg-secondary text-secondary-foreground hover:bg-secondary'
+                : 'bg-background/90 text-foreground hover:bg-background/90'
             }
           >
             {project.status}
           </Badge>
         </div>
 
-        <div className="absolute top-3 left-3">
-          <Badge variant="secondary" className="bg-background/90 text-foreground">
-            {project.category}
-          </Badge>
+        <div className="absolute -bottom-6 left-5 flex h-12 w-12 items-center justify-center rounded-[14px] border border-border bg-background shadow-sm">
+          <CategoryIcon className="h-5 w-5 text-highlight" strokeWidth={1.75} aria-hidden="true" />
         </div>
-
-        {images.length > 1 && (
-          <div className="absolute bottom-3 right-3">
-            <Badge variant="secondary" className="bg-background/80 text-foreground">
-              +{images.length - 1}
-            </Badge>
-          </div>
-        )}
       </div>
 
-      <CardContent className="flex flex-1 flex-col pt-5">
-        <h3 className="text-lg font-semibold text-foreground">{project.title}</h3>
+      <CardContent className="flex flex-1 flex-col pt-8">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-highlight">
+          Projet • {project.category}
+        </p>
+        <h3 className="mt-1.5 text-lg font-semibold text-foreground">{project.title}</h3>
         <p
           className={`mt-2 leading-[1.65] text-muted-foreground ${
             !expanded && hasExpandableContent ? 'line-clamp-2' : ''
@@ -83,9 +89,14 @@ const ProjectCard = ({ project }) => {
         </p>
 
         {expanded && project.impact && (
-          <div className="mt-4 rounded-r-lg border-l-2 border-primary bg-accent/40 px-4 py-3">
-            <p className="mb-1 text-sm font-semibold text-highlight">Résultat</p>
-            <p className="text-sm leading-[1.65] text-foreground">{project.impact}</p>
+          <div className="mt-4 flex gap-3 rounded-2xl bg-accent/40 px-4 py-3">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
+              1
+            </span>
+            <div>
+              <p className="mb-1 text-sm font-semibold text-highlight">Résultat</p>
+              <p className="text-sm leading-[1.65] text-foreground">{project.impact}</p>
+            </div>
           </div>
         )}
 
@@ -111,7 +122,7 @@ const ProjectCard = ({ project }) => {
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="rounded-full border border-border bg-secondary px-2.5 py-1 text-xs text-secondary-foreground"
+                className="rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground"
               >
                 {tech}
               </span>
@@ -126,7 +137,7 @@ const ProjectCard = ({ project }) => {
             className="mt-4 w-fit gap-2"
           >
             <Images className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-            Galerie
+            Galerie{images.length > 1 ? ` (${images.length})` : ''}
           </Button>
         )}
 
@@ -344,17 +355,20 @@ const Projects = () => {
                   {exp.stats
                     .filter((item) => item.label)
                     .map((item) => (
-                      <div key={item.label} className="rounded-2xl border border-border bg-card p-5 text-center">
-                        <div className="font-mono text-2xl font-semibold text-highlight">{item.value}</div>
-                        <div className="mt-1 text-xs leading-snug text-muted-foreground">{item.label}</div>
+                      <div
+                        key={item.label}
+                        className="rounded-3xl bg-gradient-signature-deep p-5 text-center text-white shadow-sm"
+                      >
+                        <div className="font-mono text-2xl font-semibold">{item.value}</div>
+                        <div className="mt-1 text-xs leading-snug text-white/80">{item.label}</div>
                       </div>
                     ))}
                 </div>
               )}
 
               <div className="grid gap-6 md:grid-cols-2">
-                {projects.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                {projects.map((project, index) => (
+                  <ProjectCard key={project.id} project={project} index={index} total={projects.length} />
                 ))}
               </div>
 
