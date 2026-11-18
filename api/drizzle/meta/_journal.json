@@ -43,6 +43,13 @@
       "when": 1794999999999,
       "tag": "0005_seed_certifications",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1795000500000,
+      "tag": "0006_add_parcours_section",
+      "breakpoints": true
     }
   ]
 }

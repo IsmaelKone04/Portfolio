@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import "./App.css";
 import { BrowserRouter, Routes, Route, Outlet, useLocation } from "react-router-dom";
 import HomePage from './pages/HomePage';
+import ParcoursPage from './pages/ParcoursPage';
 import RealisationsPage from './pages/RealisationsPage';
 import CompetencesPage from './pages/CompetencesPage';
 import CertificationsPage from './pages/CertificationsPage';
@@ -31,6 +32,7 @@ function App() {
               rechargé qu'une fois, pas à chaque changement de page. */}
           <Route element={<ContentProvider><Outlet /></ContentProvider>}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/parcours" element={<ParcoursPage />} />
             <Route path="/realisations" element={<RealisationsPage />} />
             <Route path="/competences" element={<CompetencesPage />} />
             <Route path="/certifications" element={<CertificationsPage />} />

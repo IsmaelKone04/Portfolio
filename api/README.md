@@ -59,6 +59,11 @@ imbriqués), `certifications` (POST/PUT/DELETE + `PUT`/`DELETE
 (POST/PUT/DELETE), `sections` (GET/PUT, visibilité par page), `site-meta/:key`
 (PUT) et `analytics` (GET, déplacé ici depuis la racine publique).
 
+La migration `0006` réintroduit la page Parcours (`sections.key = 'parcours'`), retirée
+par erreur lors du passage aux pages dédiées — purement une donnée, aucun changement de
+schéma. Le contenu qu'elle affiche (stages/missions) vit déjà dans `groups`/
+`group_achievements`/`group_stats`, administré via l'onglet Expériences de `/admin`.
+
 Les tables `education`/`academic` existent encore en base (migrations 0000-0002)
 mais ne sont plus exposées côté public ni admin : leur contenu réel a été repris
 dans `certifications` (migration 0005) quand le site est passé de 5 sections sur

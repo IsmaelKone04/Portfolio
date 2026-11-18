@@ -13,8 +13,8 @@ redessiné dans un style sobre et professionnel (voir §6). Trois dossiers :
 
 - **frontend/** — React 19 (Create React App via **CRACO**), **Tailwind CSS**,
   composants **shadcn/ui** (Radix UI), icônes **lucide-react**, routing
-  **react-router-dom**. Site en 5 pages (`/`, `/realisations`, `/competences`,
-  `/certifications`, `/contact`) + `/admin` — voir §2 et §4.
+  **react-router-dom**. Site en 6 pages (`/`, `/parcours`, `/realisations`,
+  `/competences`, `/certifications`, `/contact`) + `/admin` — voir §2 et §4.
 - **api/** — Worker Cloudflare (**Hono + Drizzle + D1 + R2**), préfixe `/api`. C'est la
   **source de vérité du contenu** : profil, projets/expériences, compétences,
   certifications, formation, langues, etc., tous pilotables en CRUD depuis `/admin`
@@ -48,11 +48,11 @@ chantier concerné** — committer localement et tester sont délégués, le pus
 frontend/
   src/
     pages/                      # une page = une route ; compose les components ci-dessous
-      HomePage.js (Hero seul)  RealisationsPage.js  CompetencesPage.js
-      CertificationsPage.js  ContactPage.js
+      HomePage.js (Hero seul)  ParcoursPage.js  RealisationsPage.js
+      CompetencesPage.js  CertificationsPage.js  ContactPage.js
     components/
-      Header.js (nav par route)  Hero.js  About.js  Skills.js  Projects.js
-      MethodBlock.js  Certifications.js  Contact.js  Admin.js  ui/ (shadcn/ui)
+      Header.js (nav par route)  Hero.js  Parcours.js  About.js  Skills.js
+      Projects.js  MethodBlock.js  Certifications.js  Contact.js  Admin.js  ui/ (shadcn/ui)
       admin/ (un onglet par domaine : Sections, Profil, Expériences, Réalisations,
         Certifications, Messages, Statistiques)
     contexts/ContentContext.js  # fetch API + repli mockData.js, visibilité des pages
@@ -116,9 +116,17 @@ mélange partiel API/mockData. `mockData.js` doit donc rester à jour avec le co
 en parallèle de ce qui est en base.
 
 La visibilité de chaque page (sauf Accueil, toujours visible) est pilotable depuis
-l'onglet Sections de `/admin` : `realisations`, `competences`, `certifications`,
-`contact`. Masquer une page la retire du menu et affiche un message neutre si on y
-accède directement par l'URL — son contenu reste en base, rien n'est supprimé.
+l'onglet Sections de `/admin` : `parcours`, `realisations`, `competences`,
+`certifications`, `contact`. Masquer une page la retire du menu et affiche un message
+neutre si on y accède directement par l'URL — son contenu reste en base, rien n'est
+supprimé.
+
+La page Parcours affiche la chronologie des stages/missions (`groups` où
+`kind="experience"`, administrés via l'onglet Expériences) : rôle, période,
+description narrative et liste des réalisations clé de chaque stage. Elle est
+distincte de Réalisations, qui détaille chaque livrable individuellement (image,
+stack, impact) et se filtre par domaine plutôt que par mission — les deux pages sont
+complémentaires, pas redondantes.
 
 Ce qui est réellement dynamique (jamais de repli mockData, uniquement en base) :
 - Formulaire de contact → table `contact_messages`, lue via `/admin`.

@@ -6,6 +6,7 @@ import { useContent, useSectionVisible } from '../contexts/ContentContext';
 
 const NAV_LINKS = [
   { label: 'Accueil', to: '/', section: null },
+  { label: 'Parcours', to: '/parcours', section: 'parcours' },
   { label: 'Réalisations', to: '/realisations', section: 'realisations' },
   { label: 'Compétences', to: '/competences', section: 'competences' },
   { label: 'Certifications', to: '/certifications', section: 'certifications' },
@@ -20,11 +21,13 @@ const navLinkClass = ({ isActive }) =>
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { personal } = useContent();
+  const parcoursVisible = useSectionVisible('parcours');
   const realisationsVisible = useSectionVisible('realisations');
   const competencesVisible = useSectionVisible('competences');
   const certificationsVisible = useSectionVisible('certifications');
   const contactVisible = useSectionVisible('contact');
   const sectionVisibility = {
+    parcours: parcoursVisible,
     realisations: realisationsVisible,
     competences: competencesVisible,
     certifications: certificationsVisible,
