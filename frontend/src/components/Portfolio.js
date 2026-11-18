@@ -7,18 +7,26 @@ import Projects from './Projects';
 import Experience from './Experience';
 import Education from './Education';
 import Contact from './Contact';
+import { useSectionVisible } from '../contexts/ContentContext';
 
 const Portfolio = () => {
+  const aboutVisible = useSectionVisible('about');
+  const skillsVisible = useSectionVisible('skills');
+  const projectsVisible = useSectionVisible('projects');
+  const experienceVisible = useSectionVisible('experience');
+  const educationVisible = useSectionVisible('education');
+  const contactVisible = useSectionVisible('contact');
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
       <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Experience />
-      <Education />
-      <Contact />
+      {aboutVisible && <About />}
+      {skillsVisible && <Skills />}
+      {projectsVisible && <Projects />}
+      {experienceVisible && <Experience />}
+      {educationVisible && <Education />}
+      {contactVisible && <Contact />}
     </div>
   );
 };

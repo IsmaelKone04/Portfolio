@@ -1,10 +1,10 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
-import { studentData } from '../data/mockData';
+import { useContent } from '../contexts/ContentContext';
 
 const Hero = () => {
-  const { personal } = studentData;
+  const { personal } = useContent();
 
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });

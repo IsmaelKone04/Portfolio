@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import { studentData } from '../data/mockData';
+import { useContent, useSectionVisible } from '../contexts/ContentContext';
 
 const NAV_LINKS = [
-  { label: 'Accueil', href: '#hero' },
-  { label: 'Réalisations', href: '#projects' },
-  { label: 'Parcours', href: '#experience' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Accueil', href: '#hero', section: null },
+  { label: 'Réalisations', href: '#projects', section: 'projects' },
+  { label: 'Parcours', href: '#experience', section: 'experience' },
+  { label: 'Contact', href: '#contact', section: 'contact' },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { personal } = useContent();
+  const projectsVisible = useSectionVisible('projects');
+  const experienceVisible = useSectionVisible('experience');
+  const contactVisible = useSectionVisible('contact');
+  const sectionVisibility = { projects: projectsVisible, experience: experienceVisible, contact: contactVisible };
+  const navLinks = NAV_LINKS.filter((link) => !link.section || sectionVisibility[link.section]);
 
   const handleNavClick = () => setIsMenuOpen(false);
 
@@ -20,16 +26,16 @@ const Header = () => {
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
         <a href="#hero" className="flex items-center gap-2.5 font-semibold text-foreground">
           <img
-            src={studentData.personal.avatar}
+            src={personal.avatar}
             alt=""
             aria-hidden="true"
             className="h-7 w-7 rounded-full object-cover"
           />
-          <span>{studentData.personal.displayName}</span>
+          <span>{personal.displayName}</span>
         </a>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -63,7 +69,7 @@ const Header = () => {
       {isMenuOpen && (
         <nav className="border-b border-border bg-background px-6 py-4 md:hidden">
           <ul className="flex flex-col gap-3">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}

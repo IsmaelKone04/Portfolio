@@ -18,17 +18,7 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import ProjectGallery from './ProjectGallery';
-import { studentData } from '../data/mockData';
-
-// Les réalisations sont rattachées à leur contexte par `groupId` : soit un stage
-// (`experience`), soit un groupe hors stage (`projectGroups`, ex. projets personnels).
-// Elles sont présentées par groupe plutôt qu'en une seule grille indifférenciée.
-const groups = [...studentData.experience, ...(studentData.projectGroups || [])]
-  .map((exp) => ({
-    exp,
-    projects: studentData.projects.filter((p) => p.groupId === exp.id)
-  }))
-  .filter((group) => group.projects.length > 0);
+import { useContent } from '../contexts/ContentContext';
 
 // Au-delà de cette longueur, la description est repliée par défaut (rien n'est
 // supprimé : le texte complet et le résultat restent accessibles via "Voir les détails").
@@ -211,13 +201,14 @@ const GroupHeader = ({ exp, count }) => (
 
 // Personnes pouvant attester du travail présenté dans ce groupe.
 const GroupReferences = ({ groupId }) => {
-  const refs = (studentData.references || []).filter((r) => r.groupId === groupId);
+  const { references, referencesFallback } = useContent();
+  const refs = (references || []).filter((r) => r.groupId === groupId);
 
   if (refs.length === 0) {
-    return studentData.referencesFallback ? (
+    return referencesFallback ? (
       <p className="mt-8 flex items-center gap-2 text-sm text-muted-foreground">
         <BadgeCheck className="h-4 w-4 text-highlight" strokeWidth={1.75} aria-hidden="true" />
-        {studentData.referencesFallback}
+        {referencesFallback}
       </p>
     ) : null;
   }
@@ -278,6 +269,17 @@ const GroupReferences = ({ groupId }) => {
 
 const Projects = () => {
   const [filter, setFilter] = useState('all');
+  const { experience, projectGroups, projects } = useContent();
+
+  // Les réalisations sont rattachées à leur contexte par `groupId` : soit un stage
+  // (`experience`), soit un groupe hors stage (`projectGroups`, ex. projets personnels).
+  // Elles sont présentées par groupe plutôt qu'en une seule grille indifférenciée.
+  const groups = [...experience, ...(projectGroups || [])]
+    .map((exp) => ({
+      exp,
+      projects: projects.filter((p) => p.groupId === exp.id)
+    }))
+    .filter((group) => group.projects.length > 0);
 
   const visibleGroups = filter === 'all' ? groups : groups.filter((group) => group.exp.id === filter);
 
@@ -303,7 +305,7 @@ const Projects = () => {
             onClick={() => setFilter('all')}
             className="rounded-full"
           >
-            Toutes <span className="opacity-70">({studentData.projects.length})</span>
+            Toutes <span className="opacity-70">({projects.length})</span>
           </Button>
 
           {groups.map(({ exp, projects }) => (

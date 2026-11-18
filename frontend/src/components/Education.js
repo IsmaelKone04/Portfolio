@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin, Calendar, BookOpen, GraduationCap, BrainCircuit, Award } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { studentData } from '../data/mockData';
+import { useContent } from '../contexts/ContentContext';
 
 // Icône par id plutôt que par correspondance de texte sur le nom de l'établissement
 // (fragile : casserait silencieusement au moindre renommage ou nouvel ajout).
@@ -70,7 +70,7 @@ const EducationCard = ({ education, isLast }) => {
 };
 
 const Education = () => {
-  const { academic } = studentData;
+  const { academic, education } = useContent();
 
   return (
     <section id="education" className="py-20">
@@ -86,11 +86,11 @@ const Education = () => {
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl">
-          {studentData.education.map((edu, index) => (
+          {education.map((edu, index) => (
             <EducationCard
               key={edu.id}
               education={edu}
-              isLast={index === studentData.education.length - 1}
+              isLast={index === education.length - 1}
             />
           ))}
         </div>

@@ -3,7 +3,7 @@ import { MapPin, Calendar, Trophy, Check, ChevronDown, FlaskConical, Boxes, List
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { studentData } from '../data/mockData';
+import { useContent } from '../contexts/ContentContext';
 
 const METHOD_ICONS = [FlaskConical, Boxes, ListChecks];
 
@@ -94,6 +94,8 @@ const ExperienceCard = ({ experience, isLast }) => {
 };
 
 const Experience = () => {
+  const { experience, method } = useContent();
+
   return (
     <section id="experience" className="py-20">
       <div className="mx-auto max-w-6xl px-6">
@@ -108,11 +110,11 @@ const Experience = () => {
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl">
-          {studentData.experience.map((exp, index) => (
+          {experience.map((exp, index) => (
             <ExperienceCard
               key={exp.id}
               experience={exp}
-              isLast={index === studentData.experience.length - 1}
+              isLast={index === experience.length - 1}
             />
           ))}
         </div>
@@ -126,7 +128,7 @@ const Experience = () => {
           </p>
 
           <div className="mt-8 grid gap-6 md:grid-cols-3">
-            {studentData.method.map((principle, index) => {
+            {method.map((principle, index) => {
               const Icon = METHOD_ICONS[index] ?? FlaskConical;
               return (
                 <div key={principle.title} className="text-center">

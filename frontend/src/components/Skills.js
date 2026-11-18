@@ -1,7 +1,7 @@
 import React from 'react';
 import { Code2, Layers, Server, Wrench, BrainCircuit } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
-import { studentData } from '../data/mockData';
+import { useContent } from '../contexts/ContentContext';
 
 const GROUPS = [
   { key: 'languages', title: 'Langages', icon: Code2 },
@@ -65,6 +65,8 @@ const SkillGroup = ({ title, icon: Icon, skills }) => (
 );
 
 const Skills = () => {
+  const { skills } = useContent();
+
   return (
     <section id="skills" className="py-20">
       <div className="mx-auto max-w-6xl px-6">
@@ -86,7 +88,7 @@ const Skills = () => {
               key={group.key}
               title={group.title}
               icon={group.icon}
-              skills={studentData.skills[group.key]}
+              skills={skills[group.key]}
             />
           ))}
         </div>

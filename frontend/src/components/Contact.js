@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { useToast } from '../hooks/use-toast';
-import { studentData } from '../data/mockData';
+import { useContent } from '../contexts/ContentContext';
 
 // Worker Cloudflare (api/) — voir REACT_APP_API_URL dans .env.local. Pas encore
 // de valeur en production : le formulaire retombe sur le mailto en cas d'échec.
@@ -15,7 +15,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { personal } = studentData;
+  const { personal } = useContent();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
