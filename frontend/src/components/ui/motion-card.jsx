@@ -53,4 +53,33 @@ const TiltCard = React.forwardRef(({ children, className, ...props }, ref) => {
 })
 TiltCard.displayName = "TiltCard"
 
-export { TiltCard }
+// Apparition progressive au défilement (fondu + léger glissement), sans l'effet
+// tilt — pour les cartes qui n'ont pas besoin de l'interaction 3D de TiltCard.
+const Reveal = React.forwardRef(({ children, className, delay = 0, ...props }, ref) => {
+  const prefersReducedMotion = useReducedMotion()
+
+  if (prefersReducedMotion) {
+    return (
+      <div ref={ref} className={cn(className)} {...props}>
+        {children}
+      </div>
+    )
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.45, ease: "easeOut", delay }}
+      className={cn(className)}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  )
+})
+Reveal.displayName = "Reveal"
+
+export { TiltCard, Reveal }

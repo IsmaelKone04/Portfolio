@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
+import { Reveal } from './ui/motion-card';
 import { useToast } from '../hooks/use-toast';
 import { useContent } from '../contexts/ContentContext';
 
@@ -96,7 +97,7 @@ const Contact = () => {
 
         <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-2">
           {/* Informations de contact */}
-          <div className="space-y-6">
+          <Reveal className="space-y-6">
             <Card className="border-border">
               <CardHeader>
                 <CardTitle className="text-sm font-semibold text-foreground">
@@ -134,9 +135,10 @@ const Contact = () => {
                 </ul>
               </CardContent>
             </Card>
-          </div>
+          </Reveal>
 
           {/* Formulaire de contact */}
+          <Reveal delay={0.1}>
           <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-sm font-semibold text-foreground">
@@ -216,6 +218,7 @@ const Contact = () => {
               </form>
             </CardContent>
           </Card>
+          </Reveal>
         </div>
 
         {/* Pied de page */}

@@ -3,6 +3,7 @@ import { GraduationCap, Trophy, BookOpen, Calendar, FileText, FileX2 } from 'luc
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Reveal } from './ui/motion-card';
 import { useContent } from '../contexts/ContentContext';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -17,6 +18,7 @@ const CertificationCard = ({ certification: c }) => {
   const Icon = TYPES[c.type]?.icon ?? GraduationCap;
 
   return (
+    <Reveal className="h-full">
     <Card className="flex h-full flex-col border-border">
       <CardContent className="flex flex-1 flex-col pt-6">
         <div className="flex items-start justify-between gap-3">
@@ -55,6 +57,7 @@ const CertificationCard = ({ certification: c }) => {
         </div>
       </CardContent>
     </Card>
+    </Reveal>
   );
 };
 

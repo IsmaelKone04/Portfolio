@@ -3,6 +3,7 @@ import { Building2, MapPin, Calendar, Trophy, Check, ChevronDown } from 'lucide-
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Reveal } from './ui/motion-card';
 import { useContent } from '../contexts/ContentContext';
 
 // Au-delà de ce nombre, les réalisations suivantes sont repliées par défaut
@@ -16,7 +17,7 @@ const ExperienceCard = ({ exp, isLast }) => {
   const visibleAchievements = expanded ? achievements : achievements.slice(0, VISIBLE_ACHIEVEMENTS);
 
   return (
-    <div className="relative">
+    <Reveal className="relative">
       {!isLast && <div className="absolute left-6 top-16 h-full w-px bg-border" aria-hidden="true" />}
       <div className="absolute left-[21px] top-6 h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true" />
 
@@ -87,7 +88,7 @@ const ExperienceCard = ({ exp, isLast }) => {
           )}
         </CardContent>
       </Card>
-    </div>
+    </Reveal>
   );
 };
 

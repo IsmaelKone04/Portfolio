@@ -1,6 +1,7 @@
 import React from 'react';
 import { Code2, Server, Lock, Wrench, BrainCircuit } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
+import { Reveal } from './ui/motion-card';
 import { useContent } from '../contexts/ContentContext';
 
 // Compétences affichées par domaine plutôt que par langage/outil isolé — plus lisible
@@ -66,21 +67,26 @@ const SkillPill = ({ skill }) => {
   );
 };
 
-const SkillGroup = ({ title, icon: Icon, skills }) => (
-  <div className="rounded-2xl border border-border bg-card p-6">
-    <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
-        <Icon className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
+// Grille Bento : les domaines les mieux dotés en compétences occupent plus de
+// place (2 colonnes) plutôt qu'une grille strictement uniforme — la taille
+// reflète le volume réel de compétences, rien n'est arbitraire.
+const SkillGroup = ({ title, icon: Icon, skills, wide, delay }) => (
+  <Reveal delay={delay} className={wide ? 'md:col-span-2' : ''}>
+    <div className="h-full rounded-2xl border border-border bg-card p-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-gradient-signature shadow-sm">
+          <Icon className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />
+        </div>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-    </div>
 
-    <div className="mt-4 flex flex-wrap gap-2">
-      {skills.map((skill) => (
-        <SkillPill key={skill.name} skill={skill} />
-      ))}
+      <div className="mt-4 flex flex-wrap gap-2">
+        {skills.map((skill) => (
+          <SkillPill key={skill.name} skill={skill} />
+        ))}
+      </div>
     </div>
-  </div>
+  </Reveal>
 );
 
 const Skills = () => {
@@ -103,8 +109,15 @@ const Skills = () => {
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {groups.map((group) => (
-            <SkillGroup key={group.key} title={group.title} icon={group.icon} skills={group.skills} />
+          {groups.map((group, i) => (
+            <SkillGroup
+              key={group.key}
+              title={group.title}
+              icon={group.icon}
+              skills={group.skills}
+              wide={group.skills.length >= 5}
+              delay={i * 0.05}
+            />
           ))}
         </div>
       </div>
